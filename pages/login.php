@@ -56,7 +56,7 @@ endif; ?>
                                        class="form-control-elegant" 
                                        id="password" 
                                        name="password" 
-                                       placeholder="Enter your password" 
+                                       placeholder="password" 
                                        required>
                                 <button type="button" class="toggle-password" aria-label="Show password" title="Show password">
                                     <i class="fas fa-eye"></i>
