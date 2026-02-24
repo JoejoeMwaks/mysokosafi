@@ -13,7 +13,7 @@ if (!isset($_SESSION['csrf_token'])) {
 
 // Basic router
 $page = $_GET['page'] ?? 'home';
-$allowed = ['home','product','products','cart','checkout','login','register','logout','mpesa_pay','mpesa_callback','cart_add','contact','faq','shipping','returns','featured','new_arrivals'];
+$allowed = ['home','product','products','cart','checkout','login','register','logout','mpesa_pay','mpesa_callback','cart_add','contact','faq','shipping','returns','featured','new_arrivals','forgot_password','reset_password'];
 if (!in_array($page, $allowed, true)) {
     $page = 'home';
 }
