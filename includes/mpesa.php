@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/../config/mpesa.php';
 
-function mpesa_get_token(): ?string {
+function mpesa_get_token(): ?string
+{
     global $MPESA_BASE_URL, $MPESA_CONSUMER_KEY, $MPESA_CONSUMER_SECRET;
     if (!$MPESA_CONSUMER_KEY || !$MPESA_CONSUMER_SECRET) {
         error_log('M-Pesa error: Consumer key/secret not configured. Set MPESA_CONSUMER_KEY and MPESA_CONSUMER_SECRET.');
@@ -22,12 +23,27 @@ function mpesa_get_token(): ?string {
         error_log('M-Pesa token request failed: ' . $err);
     }
     curl_close($ch);
-    if ($code !== 200 || !$resp) return null;
+    if ($code !== 200 || !$resp)
+        return null;
     $json = json_decode($resp, true);
     return $json['access_token'] ?? null;
 }
 
-function mpesa_stk_push(int $order_id, float $amount_kes, string $phone_msisdn, string $account_ref, string $txn_desc): array {
+function format_mpesa_phone(string $phone): string
+{
+    $phone = preg_replace('/[^\d]/', '', $phone); // Remove non-digit chars (like +, spaces)
+    if (strpos($phone, '0') === 0 && strlen($phone) === 10) {
+        $phone = '254' . substr($phone, 1); // e.g. 07... to 2547...
+    }
+    elseif (strpos($phone, '254') !== 0 && strlen($phone) === 9) {
+        $phone = '254' . $phone; // e.g. 7... to 2547...
+    }
+    return $phone;
+}
+
+function mpesa_stk_push(int $order_id, float $amount_kes, string $phone_msisdn, string $account_ref, string $txn_desc): array
+{
+    $phone_msisdn = format_mpesa_phone($phone_msisdn);
     global $MPESA_BASE_URL, $MPESA_SHORTCODE, $MPESA_PASSKEY, $MPESA_CALLBACK_URL;
     $token = mpesa_get_token();
     if (!$token) {
@@ -73,7 +89,8 @@ function mpesa_stk_push(int $order_id, float $amount_kes, string $phone_msisdn, 
     return ['ok' => false, 'error' => $json['errorMessage'] ?? ('HTTP ' . $code)];
 }
 
-function mpesa_extract_callback(array $payload): array {
+function mpesa_extract_callback(array $payload): array
+{
     $stk = $payload['Body']['stkCallback'] ?? [];
     $resultCode = $stk['ResultCode'] ?? null;
     $resultDesc = $stk['ResultDesc'] ?? null;
