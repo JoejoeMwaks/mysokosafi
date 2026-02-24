@@ -63,7 +63,7 @@ $related_products = ($id && db_has_connection()) ? get_related_products($id, 4) 
                             <div class="d-flex align-items-center gap-3">
                                 <span class="h2 fw-bold text-primary"><?php echo format_currency((float)$product['sale_price']); ?></span>
                                 <span class="h5 text-muted text-decoration-line-through"><?php echo format_currency((float)$product['price']); ?></span>
-                                <span class="badge bg-success">Save <?php echo number_format((($product['price'] - $product['sale_price']) / $product['price']) * 100, 0); ?>%</span>
+                                <span class="badge" style="background-color: var(--accent);">Save <?php echo number_format((($product['price'] - $product['sale_price']) / $product['price']) * 100, 0); ?>%</span>
                             </div>
                         <?php else: ?>
                             <span class="h2 fw-bold text-primary"><?php echo format_currency((float)$product['price']); ?></span>
@@ -150,7 +150,7 @@ $related_products = ($id && db_has_connection()) ? get_related_products($id, 4) 
                         <div class="row g-4">
                             <div class="col-6">
                                 <div class="text-center">
-                                    <i class="fas fa-truck text-success mb-2 fs-4"></i>
+                                    <i class="fas fa-truck text-primary mb-2 fs-4"></i>
                 <div class="small text-muted">Delivery fee calculated by distance</div>
                                 </div>
                             </div>
@@ -285,9 +285,6 @@ $related_products = ($id && db_has_connection()) ? get_related_products($id, 4) 
 
 <style>
 :root {
-    --primary: #4f46e5;
-    --primary-light: #818cf8;
-    --accent: #10b981;
     --light: #f8fafc;
     --dark: #1e293b;
     --text: #334155;
