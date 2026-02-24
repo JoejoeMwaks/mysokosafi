@@ -28,13 +28,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $is_ajax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
             
             if ($page === 'cart_add') {
-                if ($is_ajax) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['ok' => false, 'error' => 'Invalid security token. Please refresh the page.']);
-                } else {
-                    $_SESSION['flash'] = 'Session expired. Please login again.';
-                    header('Location: index.php?page=login');
-                }
+                header('Content-Type: application/json');
+                echo json_encode(['ok' => false, 'error' => 'Invalid security token. Please refresh the page.']);
                 exit;
             }
             
