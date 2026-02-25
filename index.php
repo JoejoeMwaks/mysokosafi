@@ -56,6 +56,17 @@ if ($page === 'logout') {
     exit;
 }
 
+// ---------------------------------------------------------
+// PRE-RENDER ROUTING (Endpoints that need to send headers)
+// ---------------------------------------------------------
+$page = isset($_GET['page']) && in_array($_GET['page'], $allowed) ? $_GET['page'] : 'home';
+
+if ($page === 'google_oauth') {
+    require_once __DIR__ . '/includes/auth_google.php';
+    handle_google_oauth();
+    exit; // Stop execution here so no HTML is output
+}
+
 // Handle auth POST (login/register) before output for proper redirects
 $auth_error = null;
 if ($page === 'login' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
