@@ -82,16 +82,28 @@ endif; ?>
                             <i class="fas fa-user-plus me-2"></i>
                             Create Account
                         </button>
-
-                        <div class="text-center">
-                            <p class="text-muted mb-0">
-                                Already have an account? 
-                                <a href="index.php?page=login" class="login-link fw-semibold">
-                                    Sign in here
-                                </a>
-                            </p>
-                        </div>
                     </form>
+
+                    <div class="position-relative mt-2 mb-4">
+                        <hr class="text-muted opacity-25">
+                        <div class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small fw-semibold">
+                            OR
+                        </div>
+                    </div>
+
+                    <a href="index.php?page=google_oauth" class="btn btn-outline-dark w-100 py-3 fw-semibold d-flex align-items-center justify-content-center mb-4" style="border-width: 2px; border-radius: 8px; transition: all 0.3s ease;">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="24" height="24" class="me-2">
+                        Sign Up with Google
+                    </a>
+
+                    <div class="text-center">
+                        <p class="text-muted mb-0">
+                            Already have an account? 
+                            <a href="index.php?page=login" class="login-link fw-semibold">
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
 

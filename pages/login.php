@@ -85,6 +85,18 @@ endif; ?>
                         </button>
                     </form>
 
+                    <div class="position-relative mt-4 mb-4">
+                        <hr class="text-muted opacity-25">
+                        <div class="position-absolute top-50 start-50 translate-middle px-3 bg-white text-muted small fw-semibold">
+                            OR
+                        </div>
+                    </div>
+
+                    <a href="index.php?page=google_oauth" class="btn btn-outline-dark w-100 py-3 fw-semibold d-flex align-items-center justify-content-center" style="border-width: 2px; border-radius: 8px; transition: all 0.3s ease;">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="24" height="24" class="me-2">
+                        Sign In with Google
+                    </a>
+
                     <div class="text-center mt-4 pt-4 border-top-elegant">
                         <p class="text-muted mb-0">
                             Don't have an account? 
