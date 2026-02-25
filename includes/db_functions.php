@@ -1561,4 +1561,68 @@ function update_user_password($user_id, $password_hash) {
         return false;
     }
 }
+
+
+// ==================== GOOGLE AUTHENTICATION ====================
+
+function get_user_by_google_id($google_id) {
+    global $pdo;
+    if (!db_has_connection() || empty($google_id)) return null;
+    try {
+        $stmt = $pdo->prepare('SELECT u.id, u.email, u.first_name, u.last_name, u.is_active,
+            (SELECT GROUP_CONCAT(r.name SEPARATOR \', \') FROM user_roles ur JOIN roles r ON ur.role_id = r.id WHERE ur.user_id = u.id) as roles 
+            FROM users u WHERE google_id = ? LIMIT 1');
+        $stmt->execute([$google_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && $user['is_active'] == 1) {
+            return $user;
+        }
+        return null;
+    } catch (PDOException $e) {
+        log_pdo_exception($e, null, __FUNCTION__);
+        return null;
+    }
+}
+
+function link_google_id_to_user($user_id, $google_id) {
+    global $pdo;
+    if (!db_has_connection()) return false;
+    try {
+        $stmt = $pdo->prepare('UPDATE users SET google_id = ? WHERE id = ?');
+        return $stmt->execute([$google_id, $user_id]);
+    } catch (PDOException $e) {
+        log_pdo_exception($e, null, __FUNCTION__);
+        return false;
+    }
+}
+
+function create_google_user($email, $first_name, $last_name, $google_id) {
+    global $pdo;
+    if (!db_has_connection()) return false;
+    try {
+        $pdo->beginTransaction();
+        
+        $stmt = $pdo->prepare('INSERT INTO users (email, first_name, last_name, google_id) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$email, $first_name, $last_name, $google_id]);
+        $user_id = $pdo->lastInsertId();
+        
+        // Assign default customer role (assuming role_id 2 is customer from config/schema.sql)
+        // Let's get role_id dynamically
+        $role_stmt = $pdo->prepare('SELECT id FROM roles WHERE name = "customer" LIMIT 1');
+        $role_stmt->execute();
+        $role_id = $role_stmt->fetchColumn();
+        
+        if ($role_id) {
+            $ur_stmt = $pdo->prepare('INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)');
+            $ur_stmt->execute([$user_id, $role_id]);
+        }
+        
+        $pdo->commit();
+        return $user_id;
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        log_pdo_exception($e, null, __FUNCTION__);
+        return false;
+    }
+}
 ?>
