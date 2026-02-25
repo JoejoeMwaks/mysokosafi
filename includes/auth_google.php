@@ -128,17 +128,27 @@ function handle_google_oauth()
             }
         }
 
-        // Log the user in
-        $display_name = trim((($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')));
+        // Log the user in securely with fallbacks
+        $first_name = is_array($user) && isset($user['first_name']) ? $user['first_name'] : '';
+        $last_name = is_array($user) && isset($user['last_name']) ? $user['last_name'] : '';
+        $email_val = is_array($user) && isset($user['email']) ? $user['email'] : $email;
+        $id_val = is_array($user) && isset($user['id']) ? (int)$user['id'] : 0;
+
+        $display_name = trim($first_name . ' ' . $last_name);
         if ($display_name === '') {
-            $display_name = $user['email'] ?? 'Account';
+            $display_name = $email_val;
+        }
+
+        $roles_arr = ['customer'];
+        if (is_array($user) && !empty($user['roles'])) {
+            $roles_arr = explode(', ', $user['roles']);
         }
 
         $_SESSION['user'] = [
-            'id' => (int)$user['id'],
+            'id' => $id_val,
             'name' => $display_name,
-            'email' => $user['email'] ?? '',
-            'roles' => isset($user['roles']) && $user['roles'] !== null ? explode(', ', $user['roles']) : ['customer']
+            'email' => $email_val,
+            'roles' => $roles_arr
         ];
 
         // Reset any invalid login attempts
