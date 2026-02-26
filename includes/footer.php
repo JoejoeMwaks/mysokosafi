@@ -48,8 +48,8 @@ if (!isset($base)) {
                     <h6 class="text-white fw-bold mb-3">Get in Touch</h6>
                     <ul class="list-unstyled small text-secondary">
                         <li class="mb-2 d-flex"><i class="fas fa-map-marker-alt mt-1 me-2 text-primary"></i> <span>Nairobi, Kenya</span></li>
-                        <li class="mb-2 d-flex"><i class="fas fa-phone mt-1 me-2 text-primary"></i> <span>0708156205</span></li>
-                        <li class="mb-2 d-flex"><i class="fas fa-envelope mt-1 me-2 text-primary"></i> <span>support@shellycorp.com</span></li>
+                        <li class="mb-2 d-flex"><i class="fas fa-phone mt-1 me-2 text-primary"></i> <span>0758549124</span></li>
+                        <li class="mb-2 d-flex"><i class="fas fa-envelope mt-1 me-2 text-primary"></i> <span>support@synora.dev</span></li>
                     </ul>
                 </div>
             </div>
@@ -57,7 +57,7 @@ if (!isset($base)) {
             <div class="border-top border-secondary mt-4 pt-4">
                 <div class="row align-items-center">
                     <div class="col-12 text-center">
-                        <p class="small text-secondary mb-2">&copy; <?php echo date('Y'); ?> SokoSafi. All rights reserved.</p>
+                        <p class="small text-secondary mb-2">&copy; 2026 Synora Systems. All rights reserved.</p>
                         <img src="<?php echo $base; ?>/assets/images/payment-methods.png" alt="Payment Methods" height="24" onerror="this.style.display='none'">
                     </div>
                 </div>
