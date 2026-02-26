@@ -48,7 +48,7 @@ if (!isset($base)) {
                     <h6 class="text-white fw-bold mb-3">Get in Touch</h6>
                     <ul class="list-unstyled small text-secondary">
                         <li class="mb-2 d-flex"><i class="fas fa-map-marker-alt mt-1 me-2 text-primary"></i> <span>Nairobi, Kenya</span></li>
-                        <li class="mb-2 d-flex"><i class="fas fa-phone mt-1 me-2 text-primary"></i> <span>0758549124</span></li>
+                        <li class="mb-2 d-flex"><i class="fas fa-phone mt-1 me-2 text-primary"></i> <span>0758549123</span></li>
                         <li class="mb-2 d-flex"><i class="fas fa-envelope mt-1 me-2 text-primary"></i> <span>support@synora.dev</span></li>
                     </ul>
                 </div>
