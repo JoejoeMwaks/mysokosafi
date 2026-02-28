@@ -125,8 +125,8 @@ body {
 }
 
 #search-form .btn-primary:hover {
-  background-color: #a07a4d;
-  border-color: #a07a4d;
+  background-color: var(--accent-dark);
+  border-color: var(--accent-dark);
 }
 
 /* Navigation */
