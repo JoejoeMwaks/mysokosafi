@@ -271,6 +271,7 @@ CREATE TABLE `users` (
   `last_name` varchar(100) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `google_id` varchar(255) DEFAULT NULL,
   `reset_token` varchar(255) DEFAULT NULL,
   `reset_expires` datetime DEFAULT NULL,
   `remember_token` varchar(255) DEFAULT NULL,
