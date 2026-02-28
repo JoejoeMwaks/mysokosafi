@@ -18,11 +18,12 @@
 }
 
 body {
-  padding-top: var(--header-height);
+  padding-top: 0;
+  /* Fixed spacing issue for sticky header */
 }
 
 .header-area {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
