@@ -211,6 +211,10 @@ h5 {
     background-color: var(--primary) !important
 }
 
+.bg-primary {
+    background-color: var(--primary) !important
+}
+
 .btn-primary {
     background: var(--accent);
     border-color: var(--accent)
