@@ -2,8 +2,20 @@
 // pages/profile.php
 
 if (!isset($_SESSION['user'])) {
-    header('Location: index.php?page=login');
-    exit;
+    echo '
+    <section class="container py-5">
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-lock fa-4x text-muted"></i>
+            </div>
+            <h2 class="fw-bold mb-3">My Profile</h2>
+            <p class="text-muted mb-4">Please login to view your profile</p>
+            <a href="index.php?page=login" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt me-2"></i>Login to Continue
+            </a>
+        </div>
+    </section>';
+    return;
 }
 
 $user = $_SESSION['user'];
