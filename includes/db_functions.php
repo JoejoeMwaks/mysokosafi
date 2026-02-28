@@ -1602,8 +1602,11 @@ function create_google_user($email, $first_name, $last_name, $google_id) {
     try {
         $pdo->beginTransaction();
         
-        $stmt = $pdo->prepare('INSERT INTO users (email, first_name, last_name, google_id) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$email, $first_name, $last_name, $google_id]);
+        $random_password = bin2hex(random_bytes(16));
+        $hashed_password = password_hash($random_password, PASSWORD_DEFAULT);
+        
+        $stmt = $pdo->prepare('INSERT INTO users (email, password, first_name, last_name, google_id) VALUES (?, ?, ?, ?, ?)');
+        $stmt->execute([$email, $hashed_password, $first_name, $last_name, $google_id]);
         $user_id = $pdo->lastInsertId();
         
         // Assign default customer role (assuming role_id 2 is customer from config/schema.sql)
