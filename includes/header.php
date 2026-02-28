@@ -25,8 +25,8 @@ $base = $in_admin ? '..' : '.';
     <link rel="stylesheet" href="<?php echo $base; ?>/assets/css/vendor.css">
     <!-- link rel="stylesheet" href="<?php echo $base; ?>/assets/css/style.css" -->
     <!-- Light theme to align all pages with homepage look -->
-    <link rel="stylesheet" href="<?php echo $base; ?>/assets/css/theme-light.css?v=5">
-    <link rel="stylesheet" href="<?php echo $base; ?>/assets/css/header-custom.css?v=3">
+    <link rel="stylesheet" href="<?php echo $base; ?>/assets/css/theme-light.css?v=6">
+    <link rel="stylesheet" href="<?php echo $base; ?>/assets/css/header-custom.css?v=4">
     <?php if ($in_admin): ?>
       <link rel="stylesheet" href="<?php echo $base; ?>/assets/css/admin.css">
     <?php
