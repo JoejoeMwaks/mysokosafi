@@ -55,7 +55,7 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
                              class="img-fluid product-image"
                              style="max-height: 100%; object-fit: contain; width: 100%; border-radius: 8px;"
                              onerror="this.src='https://dummyimage.com/800x800/e0e0e0/636363.jpg&text=No+Image'">
-                        <div id="zoom-window" class="border rounded-3 bg-white" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-repeat: no-repeat; display: none; z-index: 1050; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);"></div>
+                        <div id="zoom-window" class="border rounded-3 bg-white" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-repeat: no-repeat; display: none; z-index: 1050; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;"></div>
                     </div>
                     <?php if (!empty($product_images) && count($product_images) > 1): ?>
                     <div class="thumbnails d-flex gap-2 overflow-auto py-2" style="white-space: nowrap;">
@@ -617,7 +617,7 @@ const zoomLens = document.getElementById('zoom-lens');
 const zoomWindow = document.getElementById('zoom-window');
 
 if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
-    const ratio = 2.0; // Zoom magnification ratio
+    const ratio = 2.5; // Zoom magnification ratio
     let isHovering = false;
     
     zoomContainer.addEventListener('mouseenter', function() {
