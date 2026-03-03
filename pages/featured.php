@@ -25,7 +25,7 @@ else: ?>
                                 <img src="<?php echo htmlspecialchars($img_src); ?>" 
                                      class="card-img-top" 
                                      alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                     style="height: 250px; object-fit: cover;" loading="lazy">
+                                     style="height: 250px; object-fit: contain;" loading="lazy">
                             </a>
                             <?php if ($product['display_price'] < $product['price']): ?>
                                 <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 m-2 rounded small">SALE</span>
