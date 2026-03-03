@@ -32,6 +32,10 @@ if (!isset($base)) {
     </ul>
   </div>
 
+  <a class="nav-link nav-link-custom" href="<?php echo $base; ?>/index.php?page=track_order">
+    <i class="fa fa-map-marker-alt d-lg-none"></i> Track Order
+  </a>
+
   <a class="nav-link nav-link-custom position-relative" href="<?php echo $base; ?>/index.php?page=cart">
     <i class="fa fa-shopping-cart"></i> 
     <span class="d-lg-none ms-2">Cart</span>
