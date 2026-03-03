@@ -1719,4 +1719,43 @@ function get_product_average_rating($product_id) {
         return $default;
     } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return $default; }
 }
+
+// Get full order details by order number for tracking
+function get_order_by_number($order_number) {
+    global $pdo;
+    if (!db_has_connection()) return null;
+    try {
+        // Fetch main order info along with addresses if available
+        $sql = "SELECT o.*, 
+                       a.line1 as shipping_line1, a.line2 as shipping_line2, 
+                       a.city as shipping_city, a.state as shipping_state, 
+                       a.postal_code as shipping_postal_code, a.country as shipping_country
+                FROM orders o
+                LEFT JOIN addresses a ON o.shipping_address_id = a.id
+                WHERE o.order_number = :order_number LIMIT 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':order_number', $order_number, PDO::PARAM_STR);
+        $stmt->execute();
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$order) {
+            return null;
+        }
+
+        // Fetch order items
+        $sql_items = "SELECT oi.*, 
+                             (SELECT pi.file_path FROM product_images pi WHERE pi.product_id = oi.product_id ORDER BY `order` ASC, id ASC LIMIT 1) AS image_path
+                      FROM order_items oi
+                      WHERE oi.order_id = :order_id";
+        $stmt_items = $pdo->prepare($sql_items);
+        $stmt_items->bindParam(':order_id', $order['id'], PDO::PARAM_INT);
+        $stmt_items->execute();
+        $order['items'] = $stmt_items->fetchAll(PDO::FETCH_ASSOC);
+
+        return $order;
+    } catch (PDOException $e) {
+        log_pdo_exception($e, null, __FUNCTION__);
+        return null;
+    }
+}
 ?>
