@@ -47,6 +47,7 @@ try {
     <a class="btn btn-outline-secondary btn-sm" href="index.php?page=products&category=home-living">Home & Living</a>
     <a class="btn btn-outline-secondary btn-sm" href="index.php?page=products&category=accessories">Accessories</a>
     <a class="btn btn-outline-secondary btn-sm" href="index.php?page=products&category=shoes">Shoes</a>
+    <a class="btn btn-outline-secondary btn-sm" href="index.php?page=products&category=gaming">Gaming</a>
   </div>
 
   <?php if ($category_slug && !$category): ?>
