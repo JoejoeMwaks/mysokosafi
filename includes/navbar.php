@@ -29,6 +29,7 @@ if (!isset($base)) {
       <li><a class="dropdown-item" href="<?php echo $base; ?>/index.php?page=products&category=home-living">Home & Living</a></li>
       <li><a class="dropdown-item" href="<?php echo $base; ?>/index.php?page=products&category=accessories">Accessories</a></li>
       <li><a class="dropdown-item" href="<?php echo $base; ?>/index.php?page=products&category=shoes">Shoes</a></li>
+      <li><a class="dropdown-item" href="<?php echo $base; ?>/index.php?page=products&category=gaming">Gaming</a></li>
     </ul>
   </div>
 
