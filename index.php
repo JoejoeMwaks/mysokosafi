@@ -11,6 +11,27 @@ if (!isset($_SESSION['csrf_token'])) {
     generate_csrf_token();
 }
 
+// Auto-login from Remember Me Cookie
+if (!isset($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
+    $token = $_COOKIE['remember_token'];
+    $user = get_user_by_remember_token($token);
+    if ($user) {
+        $display_name = trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
+        if ($display_name === '') {
+            $display_name = $user['email'] ?? 'Account';
+        }
+        $_SESSION['user'] = [
+            'id' => (int)$user['id'],
+            'name' => $display_name,
+            'email' => $user['email'] ?? '',
+            'roles' => isset($user['roles']) && $user['roles'] !== null ? explode(', ', $user['roles']) : []
+        ];
+    } else {
+        // Token invalid or expired, delete cookie
+        setcookie('remember_token', '', time() - 3600, '/');
+    }
+}
+
 // Basic router
 $page = $_GET['page'] ?? 'home';
 $allowed = ['home','product','products','cart','checkout','login','register','logout','mpesa_pay','mpesa_callback','cart_add','contact','faq','shipping','returns','featured','new_arrivals','forgot_password','reset_password','google_oauth','profile','track_order'];
@@ -43,6 +64,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 
 // Handle logout before any output
 if ($page === 'logout') {
+    if (isset($_SESSION['user']['id'])) {
+        clear_user_remember_token($_SESSION['user']['id']);
+    }
+    setcookie('remember_token', '', time() - 3600, '/');
+    
     $_SESSION = [];
     if (ini_get('session.use_cookies')) {
         $params = session_get_cookie_params();
@@ -103,6 +129,14 @@ if ($page === 'login' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 'email' => $user['email'] ?? '',
                 'roles' => isset($user['roles']) && $user['roles'] !== null ? explode(', ', $user['roles']) : []
             ];
+            
+            // Handle Remember Me
+            if (!empty($_POST['remember_me'])) {
+                $token = bin2hex(random_bytes(32));
+                set_user_remember_token($user['id'], $token);
+                setcookie('remember_token', $token, time() + (86400 * 7), '/', '', isset($_SERVER['HTTPS']), true);
+            }
+            
             // Reset attempts on success
             $_SESSION['login_attempts'] = [];
             $next = $_POST['next'] ?? ($_GET['next'] ?? null);
@@ -160,8 +194,8 @@ if ($page === 'profile' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_P
         // Log the deletion and remove the user
         if ($user_email && delete_user_account($user_id, $user_email)) {
             // Unset remember me cookie if present
-            if (isset($_COOKIE['remember_me'])) {
-                setcookie('remember_me', '', time() - 3600, '/');
+            if (isset($_COOKIE['remember_token'])) {
+                setcookie('remember_token', '', time() - 3600, '/');
             }
             // Clear checkout snapshot references or rely on DB ON DELETE
             session_destroy();
