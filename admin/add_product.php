@@ -72,11 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmtImg = $pdo->prepare("INSERT INTO product_images (product_id, file_path, `order`) VALUES (?, ?, ?)");
                     $order_idx = 1;
                     
+                    $uploadDir = __DIR__ . '/../uploads/products/';
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+                    
+                    $cloudinary_failed = false;
                     for ($i = 0; $i < $limit; $i++) {
                         if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
                             $tmpPath = $_FILES['images']['tmp_name'][$i];
+                            $fileName = time() . '_' . rand(1000, 9999) . '_' . basename($_FILES['images']['name'][$i]);
+                            $localPath = $uploadDir . $fileName;
+                            $dbLocalPath = 'uploads/products/' . $fileName;
+                            
+                            $moved = move_uploaded_file($tmpPath, $localPath);
+                            $newUrl = null;
+                            
                             try {
-                                $response = $uploadApi->upload($tmpPath, [
+                                $response = $uploadApi->upload($localPath, [
                                     'folder' => 'sokosafi/products',
                                     'transformation' => [
                                         'quality' => 'auto',
@@ -86,16 +99,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     ]
                                 ]);
                                 $newUrl = $response['secure_url'];
-                                $stmtImg->execute([$product_id, $newUrl, $order_idx]);
-                                $order_idx++;
                             } catch (\Exception $e) {
                                 error_log("Cloudinary upload failed: " . $e->getMessage());
+                                $cloudinary_failed = true;
+                                if ($moved) {
+                                    $newUrl = $dbLocalPath;
+                                }
+                            }
+                            
+                            if ($newUrl) {
+                                $stmtImg->execute([$product_id, $newUrl, $order_idx]);
+                                
+                                // Update primary image path if it's the first image
+                                if ($order_idx === 1) {
+                                    $pdo->prepare("UPDATE products SET image_path = ? WHERE id = ?")->execute([$newUrl, $product_id]);
+                                }
+                                $order_idx++;
                             }
                         }
                     }
                 }
 
                 $message = 'Product added successfully.';
+                if (isset($cloudinary_failed) && $cloudinary_failed) {
+                    $warn_msg = ' However, Cloudinary upload failed. Images were saved locally on the server space instead. Please check your Cloudinary configuration.';
+                }
                 // Clear form?
                 $_POST = []; 
             } catch (Throwable $e) {
@@ -109,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <section class="container">
     <h2>Add New Product</h2>
     <?php if ($message): ?>
-        <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
+        <div class="alert alert-info"><?php echo htmlspecialchars($message); ?><?php if(isset($warn_msg)) echo ' <strong class="text-warning">'.$warn_msg.'</strong>'; ?></div>
     <?php endif; ?>
     
     <form method="post" enctype="multipart/form-data" class="d-grid gap-3" style="max-width: 600px;">
