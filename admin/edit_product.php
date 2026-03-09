@@ -75,11 +75,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
           
           $stmtImg = $pdo->prepare("INSERT INTO product_images (product_id, file_path, `order`) VALUES (?, ?, ?)");
           
+          $uploadDir = __DIR__ . '/../uploads/products/';
+          if (!is_dir($uploadDir)) {
+              mkdir($uploadDir, 0777, true);
+          }
+          
           for ($i = 0; $i < $limit; $i++) {
               if ($_FILES['new_images']['error'][$i] === UPLOAD_ERR_OK) {
                   $tmpPath = $_FILES['new_images']['tmp_name'][$i];
+                  $fileName = time() . '_' . rand(1000, 9999) . '_' . basename($_FILES['new_images']['name'][$i]);
+                  $localPath = $uploadDir . $fileName;
+                  $dbLocalPath = 'uploads/products/' . $fileName;
+                  
+                  $moved = move_uploaded_file($tmpPath, $localPath);
+                  $newUrl = null;
+                  
                   try {
-                      $response = $uploadApi->upload($tmpPath, [
+                      $response = $uploadApi->upload($localPath, [
                           'folder' => 'sokosafi/products',
                           'transformation' => [
                               'quality' => 'auto',
@@ -89,21 +101,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
                           ]
                       ]);
                       $newUrl = $response['secure_url'];
-                      $stmtImg->execute([$id, $newUrl, $order_idx]);
-                      $order_idx++;
                   } catch (\Exception $e) {
                       error_log("Cloudinary upload failed: " . $e->getMessage());
+                      if ($moved) {
+                          $newUrl = $dbLocalPath;
+                      }
                   }
                   
-                  // Save locally as well
-                  $uploadDir = __DIR__ . '/../assets/images/products/';
-                  if (!is_dir($uploadDir)) {
-                      @mkdir($uploadDir, 0777, true);
+                  if ($newUrl) {
+                      $stmtImg->execute([$id, $newUrl, $order_idx]);
+                      
+                      // Update primary image path if it's the first image
+                      if ($order_idx === 1) {
+                          $pdo->prepare("UPDATE products SET image_path = ? WHERE id = ?")->execute([$newUrl, $id]);
+                      }
+                      $order_idx++;
                   }
-                  $ext = pathinfo($_FILES['new_images']['name'][$i], PATHINFO_EXTENSION);
-                  $filename = 'prod_' . $id . '_' . time() . '_' . $i . '.' . $ext;
-                  $targetPath = $uploadDir . $filename;
-                  @move_uploaded_file($tmpPath, $targetPath);
               }
           }
       }
