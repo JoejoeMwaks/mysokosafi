@@ -38,8 +38,22 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
         <div class="row g-5">
             <!-- Product Images -->
             <div class="col-lg-6">
-                <div class="product-gallery d-flex flex-column gap-3">
-                    <div id="image-zoom-container" class="main-image position-relative border rounded-3 p-2 bg-white" style="height: 400px; display: flex; align-items: center; justify-content: center; cursor: crosshair; user-select: none;">
+                <div class="product-gallery d-flex flex-row gap-3" style="height: 400px;">
+                    
+<div class="thumbnails d-flex flex-column gap-2 overflow-auto pe-1" style="width: 80px; flex-shrink: 0;">
+    <?php if (!empty($product_images) && count($product_images) > 1): foreach ($product_images as $index => $image): ?>
+        <div class="thumbnail-wrapper border rounded p-1 cursor-pointer <?php echo $index === 0 ? 'border-primary' : 'border-secondary'; ?>" 
+             onclick="changeMainImage('<?php echo htmlspecialchars($image['file_path']); ?>', this)" 
+             style="width: 100%; height: 80px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: white;">
+            <img src="<?php echo htmlspecialchars($image['file_path']); ?>" 
+                 alt="Thumbnail" 
+                 style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                 onerror="this.src='https://dummyimage.com/80x80/e0e0e0/636363.jpg&text=No+Image'">
+        </div>
+    <?php endforeach; endif; ?>
+</div>
+<div id="image-zoom-container" class="main-image flex-grow-1 position-relative border rounded-3 p-2 bg-white" style="display: flex; align-items: center; justify-content: center; cursor: crosshair; user-select: none;">
+
                         <?php 
                         $main_img_url = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
                         if (!empty($product_images)) {
@@ -57,20 +71,7 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
                              onerror="this.src='https://dummyimage.com/800x800/e0e0e0/636363.jpg&text=No+Image'">
                         <div id="zoom-window" class="border rounded-3 bg-white" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-repeat: no-repeat; display: none; z-index: 1050; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;"></div>
                     </div>
-                    <?php if (!empty($product_images) && count($product_images) > 1): ?>
-                    <div class="thumbnails d-flex gap-2 overflow-auto py-2" style="white-space: nowrap;">
-                        <?php foreach ($product_images as $index => $image): ?>
-                            <div class="thumbnail-wrapper border rounded p-1 cursor-pointer <?php echo $index === 0 ? 'border-primary' : 'border-secondary'; ?>" 
-                                 onclick="changeMainImage('<?php echo htmlspecialchars($image['file_path']); ?>', this)" 
-                                 style="width: 80px; height: 80px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: white;">
-                                <img src="<?php echo htmlspecialchars($image['file_path']); ?>" 
-                                     alt="Thumbnail" 
-                                     style="max-width: 100%; max-height: 100%; object-fit: contain;"
-                                     onerror="this.src='https://dummyimage.com/80x80/e0e0e0/636363.jpg&text=No+Image'">
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php endif; ?>
+                    <!-- Thumbnails moved to left -->
                 </div>
             </div>
 
