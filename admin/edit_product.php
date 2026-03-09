@@ -94,6 +94,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
                   } catch (\Exception $e) {
                       error_log("Cloudinary upload failed: " . $e->getMessage());
                   }
+                  
+                  // Save locally as well
+                  $uploadDir = __DIR__ . '/../assets/images/products/';
+                  if (!is_dir($uploadDir)) {
+                      @mkdir($uploadDir, 0777, true);
+                  }
+                  $ext = pathinfo($_FILES['new_images']['name'][$i], PATHINFO_EXTENSION);
+                  $filename = 'prod_' . $id . '_' . time() . '_' . $i . '.' . $ext;
+                  $targetPath = $uploadDir . $filename;
+                  @move_uploaded_file($tmpPath, $targetPath);
               }
           }
       }
