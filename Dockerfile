@@ -35,6 +35,9 @@ RUN echo '#!/bin/bash\n\
     mkdir -p /var/www/html/assets/images/products\n\
     chown -R www-data:www-data /var/www/html/assets/images/products\n\
     chmod -R 775 /var/www/html/assets/images/products\n\
+    mkdir -p /var/www/html/uploads/products\n\
+    chown -R www-data:www-data /var/www/html/uploads/products\n\
+    chmod -R 775 /var/www/html/uploads/products\n\
     exec apache2-foreground' > /usr/local/bin/entrypoint.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
 
