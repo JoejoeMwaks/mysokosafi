@@ -1421,6 +1421,9 @@ function get_primary_image_path($product_id) {
     }
 }
 function resolve_product_image($product) {
+    if (is_array($product) && !empty($product['image_path'])) {
+        return $product['image_path'];
+    }
     $id = is_array($product) ? ($product['id'] ?? null) : $product;
     $name = is_array($product) ? ($product['name'] ?? '') : '';
     static $files = null;
