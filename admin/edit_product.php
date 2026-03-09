@@ -22,6 +22,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
     $sale_price = $_POST['sale_price'] !== '' ? (float)$_POST['sale_price'] : null;
     $stock = (int)($_POST['stock'] ?? 0);
     $description = trim($_POST['description'] ?? '');
+    
+    // Ensure unique slug
+    if ($slug === '') {
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
+    }
+    $original_slug = $slug;
+    $counter = 1;
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM products WHERE slug = ? AND id != ?");
+    while (true) {
+        $stmtCheck->execute([$slug, $id]);
+        if ($stmtCheck->fetchColumn() > 0) {
+            $slug = $original_slug . '-' . $counter;
+            $counter++;
+        } else {
+            break;
+        }
+    }
+    
     try {
       // Simple inline update query (no separate helper yet)
       $stmt = $pdo->prepare("UPDATE products SET name=:name, slug=:slug, description=:description, price=:price, sale_price=:sale_price, stock=:stock WHERE id=:id");

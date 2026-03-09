@@ -31,6 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
             }
             
+            // Ensure unique slug
+            $original_slug = $slug;
+            $counter = 1;
+            $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM products WHERE slug = ?");
+            while (true) {
+                $stmtCheck->execute([$slug]);
+                if ($stmtCheck->fetchColumn() > 0) {
+                    $slug = $original_slug . '-' . $counter;
+                    $counter++;
+                } else {
+                    break;
+                }
+            }
+            
             try {
                 $stmt = $pdo->prepare("INSERT INTO products (name, slug, description, price, sale_price, stock, created_at, is_active) VALUES (:name, :slug, :description, :price, :sale_price, :stock, NOW(), 1)");
                 $stmt->execute([
