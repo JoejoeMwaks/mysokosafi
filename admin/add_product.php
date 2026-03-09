@@ -47,18 +47,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $catIds = isset($_POST['category_ids']) ? (array)$_POST['category_ids'] : [];
                 set_product_categories($product_id, $catIds);
 
-                // Handle Image Upload
-                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                    $uploadDir = __DIR__ . '/../assets/images/products/';
-                    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+                // Handle Image Uploads directly to Cloudinary
+                if (isset($_FILES['images']) && is_array($_FILES['images']['name'])) {
+                    require_once __DIR__ . '/../config/cloudinary.php';
+                    $uploadApi = new \Cloudinary\Api\Upload\UploadApi();
                     
-                    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                    $filename = 'prod_' . $product_id . '_' . time() . '.' . $ext;
-                    $targetPath = $uploadDir . $filename;
+                    $fileCount = count($_FILES['images']['name']);
+                    $limit = min(10, $fileCount);
                     
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-                        $stmtImg = $pdo->prepare("INSERT INTO product_images (product_id, file_path, `order`) VALUES (?, ?, 1)");
-                        $stmtImg->execute([$product_id, './assets/images/products/' . $filename]);
+                    $stmtImg = $pdo->prepare("INSERT INTO product_images (product_id, file_path, `order`) VALUES (?, ?, ?)");
+                    $order_idx = 1;
+                    
+                    for ($i = 0; $i < $limit; $i++) {
+                        if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
+                            $tmpPath = $_FILES['images']['tmp_name'][$i];
+                            try {
+                                $response = $uploadApi->upload($tmpPath, [
+                                    'folder' => 'sokosafi/products',
+                                    'transformation' => [
+                                        'quality' => 'auto',
+                                        'fetch_format' => 'auto',
+                                        'width' => 800,
+                                        'crop' => 'limit'
+                                    ]
+                                ]);
+                                $newUrl = $response['secure_url'];
+                                $stmtImg->execute([$product_id, $newUrl, $order_idx]);
+                                $order_idx++;
+                            } catch (\Exception $e) {
+                                error_log("Cloudinary upload failed: " . $e->getMessage());
+                            }
+                        }
                     }
                 }
 
@@ -128,8 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         
         <div>
-            <label class="form-label">Main Image</label>
-            <input type="file" name="image" class="form-control" accept="image/*">
+            <label class="form-label">Product Images (up to 10)</label>
+            <input type="file" name="images[]" class="form-control" accept="image/*" multiple max="10">
         </div>
         
         <button type="submit" class="btn btn-primary">Add Product</button>

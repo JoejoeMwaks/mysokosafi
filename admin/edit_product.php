@@ -40,6 +40,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
       // Update category associations
       $catIds = isset($_POST['category_ids']) ? (array)$_POST['category_ids'] : [];
       set_product_categories($id, $catIds);
+
+      // Handle new images upload directly to Cloudinary
+      if (isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
+          require_once __DIR__ . '/../config/cloudinary.php';
+          $uploadApi = new \Cloudinary\Api\Upload\UploadApi();
+          
+          $fileCount = count($_FILES['new_images']['name']);
+          $limit = min(10, $fileCount);
+          
+          // Get current max order
+          $stmtMax = $pdo->prepare("SELECT MAX(`order`) as max_ord FROM product_images WHERE product_id = ?");
+          $stmtMax->execute([$id]);
+          $maxRes = $stmtMax->fetch();
+          $order_idx = ($maxRes && $maxRes['max_ord']) ? (int)$maxRes['max_ord'] + 1 : 1;
+          
+          $stmtImg = $pdo->prepare("INSERT INTO product_images (product_id, file_path, `order`) VALUES (?, ?, ?)");
+          
+          for ($i = 0; $i < $limit; $i++) {
+              if ($_FILES['new_images']['error'][$i] === UPLOAD_ERR_OK) {
+                  $tmpPath = $_FILES['new_images']['tmp_name'][$i];
+                  try {
+                      $response = $uploadApi->upload($tmpPath, [
+                          'folder' => 'sokosafi/products',
+                          'transformation' => [
+                              'quality' => 'auto',
+                              'fetch_format' => 'auto',
+                              'width' => 800,
+                              'crop' => 'limit'
+                          ]
+                      ]);
+                      $newUrl = $response['secure_url'];
+                      $stmtImg->execute([$id, $newUrl, $order_idx]);
+                      $order_idx++;
+                  } catch (\Exception $e) {
+                      error_log("Cloudinary upload failed: " . $e->getMessage());
+                  }
+              }
+          }
+      }
     } catch (Throwable $e) {
       $message = 'Error: ' . $e->getMessage();
     }
