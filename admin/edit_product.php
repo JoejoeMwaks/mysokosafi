@@ -87,11 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
                   $localPath = $uploadDir . $fileName;
                   $dbLocalPath = 'uploads/products/' . $fileName;
                   
-                  $moved = move_uploaded_file($tmpPath, $localPath);
+                  $moved = @move_uploaded_file($tmpPath, $localPath);
+                  $uploadSource = $moved ? $localPath : $tmpPath;
                   $newUrl = null;
                   
                   try {
-                      $response = $uploadApi->upload($localPath, [
+                      $response = $uploadApi->upload($uploadSource, [
                           'folder' => 'sokosafi/products',
                           'transformation' => [
                               'quality' => 'auto',
