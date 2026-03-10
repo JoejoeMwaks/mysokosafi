@@ -134,7 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
     }
   }
 }
-
 $products = db_has_connection() ? get_products(null, null) : [];
 ?>
 
