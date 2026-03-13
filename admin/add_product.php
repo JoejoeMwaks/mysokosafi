@@ -110,11 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             
                             if ($newUrl) {
                                 $stmtImg->execute([$product_id, $newUrl, $order_idx]);
-                                
-                                // Update primary image path if it's the first image
-                                if ($order_idx === 1) {
-                                    $pdo->prepare("UPDATE products SET image_path = ? WHERE id = ?")->execute([$newUrl, $product_id]);
-                                }
                                 $order_idx++;
                             }
                         }
