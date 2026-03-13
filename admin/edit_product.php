@@ -186,9 +186,8 @@ $products = db_has_connection() ? get_products(null, null) : [];
 
   <?php if (!isset($_GET['id'])): ?>
     <!-- LIST VIEW (JIJI STYLE CARDS) -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="mb-4">
         <h2>My Products</h2>
-        <a href="admin/add_product.php" class="btn btn-primary">+ Add Product</a>
     </div>
 
     <div class="d-flex flex-column gap-3">
@@ -212,7 +211,6 @@ $products = db_has_connection() ? get_products(null, null) : [];
                         <div>
                             <div class="d-flex justify-content-between align-items-start">
                                 <h4 class="mb-1 text-dark fw-bold">KSh <?php echo number_format($p['price'], 2); ?></h4>
-                                <span class="badge bg-success">Active</span>
                             </div>
                             <h5 class="card-title text-dark mb-1"><?php echo htmlspecialchars($p['name']); ?></h5>
                             <p class="text-muted small mb-2">Stock: <?php echo (int)$p['stock']; ?> units available</p>
@@ -224,12 +222,8 @@ $products = db_has_connection() ? get_products(null, null) : [];
                             
                             <form method="post" class="m-0 p-0" onsubmit="return confirm('Are you sure you want to completely delete this product?');">
                                 <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
-                                <button type="submit" name="action" value="delete" class="btn btn-link text-danger text-decoration-none fw-bold p-0"><i class="bi bi-trash"></i> Close</button>
+                                <button type="submit" name="action" value="delete" class="btn btn-link text-danger text-decoration-none fw-bold p-0"><i class="bi bi-trash"></i> Delete</button>
                             </form>
-                            
-                            <div class="ms-auto">
-                                <span class="badge border border-warning text-warning rounded-pill">Top Ad</span>
-                            </div>
                         </div>
                     </div>
                 </div>
