@@ -191,12 +191,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <div class="card p-3 mb-4">
             <h5 class="mb-1 text-dark">Product Images (up to 10)</h5>
-            <p class="text-success small mb-3">First picture is the title picture. Supported formats are *.jpg and *.png</p>
+            <p class="text-primary small mb-3">First picture is the title picture. Supported formats are *.jpg and *.png</p>
             
             <div id="image-gallery-container" class="d-flex flex-wrap gap-2 mb-2">
                 <!-- ADD BUTTON -->
                 <div id="add-image-btn" class="border rounded d-flex align-items-center justify-content-center bg-light" style="width: 100px; height: 100px; cursor: pointer; border-style: dashed !important; border-width: 2px !important;">
-                    <span class="fs-1 text-success">+</span>
+                    <span class="fs-1 text-primary">+</span>
                 </div>
             </div>
             
@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </script>
         
         <div class="d-grid mt-4">
-            <button type="submit" class="btn btn-success btn-lg py-3 fw-bold fs-5">Add Product</button>
+            <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold fs-5">Add Product</button>
         </div>
     </form>
 </section>

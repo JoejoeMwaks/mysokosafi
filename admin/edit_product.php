@@ -193,7 +193,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
     <!-- LIST VIEW (JIJI STYLE CARDS) -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>My Products</h2>
-        <a href="admin/add_product.php" class="btn btn-success">+ Add Product</a>
+        <a href="admin/add_product.php" class="btn btn-primary">+ Add Product</a>
     </div>
 
     <div class="d-flex flex-column gap-3">
@@ -225,7 +225,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
                         
                         <!-- Actions -->
                         <div class="d-flex gap-3 align-items-center border-top pt-3 mt-2">
-                            <a href="admin/edit_product.php?id=<?php echo $p['id']; ?>" class="text-success text-decoration-none fw-bold"><i class="bi bi-pencil"></i> Edit</a>
+                            <a href="admin/edit_product.php?id=<?php echo $p['id']; ?>" class="text-primary text-decoration-none fw-bold"><i class="bi bi-pencil"></i> Edit</a>
                             
                             <form method="post" class="m-0 p-0" onsubmit="return confirm('Are you sure you want to completely delete this product?');">
                                 <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
@@ -278,37 +278,37 @@ $products = db_has_connection() ? get_products(null, null) : [];
         <div class="row g-3">
             <div class="col-md-12">
                 <label class="form-label text-muted small fw-bold">Title*</label>
-                <input type="text" name="name" value="<?php echo htmlspecialchars($product['name']); ?>" class="form-control form-control-lg border-success" required />
+                <input type="text" name="name" value="<?php echo htmlspecialchars($product['name']); ?>" class="form-control form-control-lg border-primary" required />
             </div>
             
             <div class="col-md-12">
                 <label class="form-label text-muted small fw-bold">Slug (Leave blank to auto-generate)</label>
-                <input type="text" name="slug" value="<?php echo htmlspecialchars($product['slug']); ?>" class="form-control border-success" />
+                <input type="text" name="slug" value="<?php echo htmlspecialchars($product['slug']); ?>" class="form-control border-primary" />
             </div>
             
             <div class="col-md-6">
                 <label class="form-label text-muted small fw-bold">Price*</label>
-                <input type="number" step="0.01" min="0" name="price" value="<?php echo htmlspecialchars($product['price']); ?>" class="form-control form-control-lg border-success" required />
+                <input type="number" step="0.01" min="0" name="price" value="<?php echo htmlspecialchars($product['price']); ?>" class="form-control form-control-lg border-primary" required />
             </div>
             
             <div class="col-md-6">
                 <label class="form-label text-muted small fw-bold">Sale Price</label>
-                <input type="number" step="0.01" min="0" name="sale_price" value="<?php echo htmlspecialchars($product['sale_price'] ?? ''); ?>" class="form-control border-success" />
+                <input type="number" step="0.01" min="0" name="sale_price" value="<?php echo htmlspecialchars($product['sale_price'] ?? ''); ?>" class="form-control border-primary" />
             </div>
             
             <div class="col-md-12">
                 <label class="form-label text-muted small fw-bold">Stock*</label>
-                <input type="number" step="1" min="0" name="stock" value="<?php echo (int)$product['stock']; ?>" class="form-control border-success" required />
+                <input type="number" step="1" min="0" name="stock" value="<?php echo (int)$product['stock']; ?>" class="form-control border-primary" required />
             </div>
             
             <div class="col-md-12">
                 <label class="form-label text-muted small fw-bold">Description</label>
-                <textarea name="description" rows="5" class="form-control border-success"><?php echo htmlspecialchars($product['description'] ?? ''); ?></textarea>
+                <textarea name="description" rows="5" class="form-control border-primary"><?php echo htmlspecialchars($product['description'] ?? ''); ?></textarea>
             </div>
             
             <div class="col-md-12">
                 <label class="form-label text-muted small fw-bold">Category*</label>
-                <div class="border border-success rounded p-3 bg-light">
+                <div class="border border-primary rounded p-3 bg-light">
                     <?php 
                     $selectedCats = db_has_connection() ? get_product_category_ids((int)$product['id']) : []; 
                     if (!empty($allCategories)): ?>
@@ -330,7 +330,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
             
             <div class="col-md-12 mt-4">
                 <h5 class="mb-1 text-dark">Add at least 1 photo</h5>
-                <p class="text-success small mb-3">First picture is the title picture. Supported formats are *.jpg and *.png</p>
+                <p class="text-primary small mb-3">First picture is the title picture. Supported formats are *.jpg and *.png</p>
                 
                 <div id="image-gallery-container" class="d-flex flex-wrap gap-2 mb-2">
                     <!-- EXISTING IMAGES -->
@@ -349,7 +349,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
                     
                     <!-- ADD BUTTON -->
                     <div id="add-image-btn" class="border rounded d-flex align-items-center justify-content-center bg-light" style="width: 100px; height: 100px; cursor: pointer; border-style: dashed !important; border-width: 2px !important;">
-                        <span class="fs-1 text-success">+</span>
+                        <span class="fs-1 text-primary">+</span>
                     </div>
                 </div>
                 
@@ -362,7 +362,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
         </div>
 
         <div class="d-grid mt-4">
-            <button class="btn btn-success btn-lg py-3 fw-bold fs-5" type="submit" name="action" value="update">Next</button>
+            <button class="btn btn-primary btn-lg py-3 fw-bold fs-5" type="submit" name="action" value="update">Next</button>
         </div>
     </form>
     
