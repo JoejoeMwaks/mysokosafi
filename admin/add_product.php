@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price = (float)($_POST['price'] ?? 0);
         $sale_price = $_POST['sale_price'] !== '' ? (float)$_POST['sale_price'] : null;
         $stock = (int)($_POST['stock'] ?? 0);
+        $warranty = trim($_POST['warranty'] ?? '');
         $description = trim($_POST['description'] ?? '');
         
         if ($name === '') {
@@ -46,14 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             try {
-                $stmt = $pdo->prepare("INSERT INTO products (name, slug, description, price, sale_price, stock, created_at, is_active) VALUES (:name, :slug, :description, :price, :sale_price, :stock, NOW(), 1)");
+                $stmt = $pdo->prepare("INSERT INTO products (name, slug, description, price, sale_price, stock, warranty, created_at, is_active) VALUES (:name, :slug, :description, :price, :sale_price, :stock, :warranty, NOW(), 1)");
                 $stmt->execute([
                     ':name' => $name,
                     ':slug' => $slug,
                     ':description' => $description,
                     ':price' => $price,
                     ':sale_price' => $sale_price,
-                    ':stock' => $stock
+                    ':stock' => $stock,
+                    ':warranty' => $warranty ? $warranty : null
                 ]);
                 $product_id = $pdo->lastInsertId();
                 
@@ -163,6 +165,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div>
             <label class="form-label">Stock Quantity</label>
             <input type="number" name="stock" class="form-control" value="<?php echo htmlspecialchars($_POST['stock'] ?? '0'); ?>">
+        </div>
+        
+        <div>
+            <label class="form-label">Warranty</label>
+            <input type="text" name="warranty" class="form-control" placeholder="e.g. 1 Year, 6 Months" value="<?php echo htmlspecialchars($_POST['warranty'] ?? ''); ?>">
         </div>
         
         <div>

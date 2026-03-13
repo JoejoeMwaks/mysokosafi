@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
     $price = (float)($_POST['price'] ?? 0);
     $sale_price = $_POST['sale_price'] !== '' ? (float)$_POST['sale_price'] : null;
     $stock = (int)($_POST['stock'] ?? 0);
+    $warranty = trim($_POST['warranty'] ?? '');
     $description = trim($_POST['description'] ?? '');
     
     // Ensure unique slug
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
     
     try {
       // Simple inline update query (no separate helper yet)
-      $stmt = $pdo->prepare("UPDATE products SET name=:name, slug=:slug, description=:description, price=:price, sale_price=:sale_price, stock=:stock WHERE id=:id");
+      $stmt = $pdo->prepare("UPDATE products SET name=:name, slug=:slug, description=:description, price=:price, sale_price=:sale_price, stock=:stock, warranty=:warranty WHERE id=:id");
       $stmt->execute([
         ':name' => $name,
         ':slug' => $slug,
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
         ':price' => $price,
         ':sale_price' => $sale_price,
         ':stock' => $stock,
+        ':warranty' => $warranty ? $warranty : null,
         ':id' => $id,
       ]);
       $message = 'Product updated.';
@@ -288,6 +290,11 @@ $products = db_has_connection() ? get_products(null, null) : [];
             <div class="col-md-12">
                 <label class="form-label text-muted small fw-bold">Stock*</label>
                 <input type="number" step="1" min="0" name="stock" value="<?php echo (int)$product['stock']; ?>" class="form-control border-primary" required />
+            </div>
+            
+            <div class="col-md-12">
+                <label class="form-label text-muted small fw-bold">Warranty</label>
+                <input type="text" name="warranty" value="<?php echo htmlspecialchars($product['warranty'] ?? ''); ?>" placeholder="e.g. 1 Year, 6 Months" class="form-control border-primary" />
             </div>
             
             <div class="col-md-12">

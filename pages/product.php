@@ -134,12 +134,14 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
                                     <small>30-Day Returns</small>
                                 </div>
                             </div>
+                            <?php if (!empty($product['warranty'])): ?>
                             <div class="col-6">
                                 <div class="d-flex align-items-center text-muted">
                                     <i class="fas fa-shield-alt text-primary me-2"></i>
-                                    <small>2-Year Warranty</small>
+                                    <small><?php echo htmlspecialchars($product['warranty']); ?> Warranty</small>
                                 </div>
                             </div>
+                            <?php endif; ?>
                             <div class="col-6">
                                 <div class="d-flex align-items-center text-muted">
                                     <i class="fas fa-headset text-primary me-2"></i>
@@ -259,12 +261,14 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
                                             <span class="fw-semibold">Lightweight</span>
                                         </div>
                                     </div>
+                                    <?php if (!empty($product['warranty'])): ?>
                                     <div class="col-md-6">
                                         <div class="d-flex justify-content-between border-bottom py-2">
                                             <span class="text-muted">Warranty</span>
-                                            <span class="fw-semibold">2 Years</span>
+                                            <span class="fw-semibold"><?php echo htmlspecialchars($product['warranty']); ?></span>
                                         </div>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
