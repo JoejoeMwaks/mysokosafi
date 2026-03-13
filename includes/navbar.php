@@ -6,20 +6,24 @@ $roles = $is_logged_in ? ($_SESSION['user']['roles'] ?? []) : [];
 $is_admin = is_array($roles) && in_array('admin', $roles, true);
 // Base path provided by header, compute fallback if not set
 if (!isset($base)) {
-  $in_admin = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
-  $base = $in_admin ? '..' : '.';
+    $in_admin = isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/admin/') !== false;
+    $base = $in_admin ? '..' : '.';
 }
+
+// Determine active page
+$current_page = $_GET['page'] ?? 'home';
+$is_category = isset($_GET['category']);
 ?>
 <nav class="nav flex-column flex-lg-row align-items-lg-center gap-1 gap-lg-2">
-  <a class="nav-link nav-link-custom" href="<?php echo $base; ?>/index.php?page=home">
+  <a class="nav-link nav-link-custom <?php echo ($current_page === 'home') ? 'active' : ''; ?>" href="<?php echo $base; ?>/index.php?page=home">
     <i class="fa fa-home d-lg-none"></i> Home
   </a>
-  <a class="nav-link nav-link-custom" href="<?php echo $base; ?>/index.php?page=products">
+  <a class="nav-link nav-link-custom <?php echo ($current_page === 'products' && !$is_category) ? 'active' : ''; ?>" href="<?php echo $base; ?>/index.php?page=products">
     <i class="fa fa-th-large d-lg-none"></i> Shop
   </a>
   
   <div class="dropdown">
-    <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="navCategories" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link nav-link-custom dropdown-toggle <?php echo ($current_page === 'products' && $is_category) ? 'active' : ''; ?>" href="#" id="navCategories" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       <i class="fa fa-list d-lg-none"></i> Categories
     </a>
     <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="navCategories">
@@ -33,7 +37,7 @@ if (!isset($base)) {
     </ul>
   </div>
 
-  <a class="nav-link nav-link-custom" href="<?php echo $base; ?>/index.php?page=track_order">
+  <a class="nav-link nav-link-custom <?php echo ($current_page === 'track_order') ? 'active' : ''; ?>" href="<?php echo $base; ?>/index.php?page=track_order">
     <i class="fa fa-map-marker-alt d-lg-none"></i> Track Order
   </a>
 
