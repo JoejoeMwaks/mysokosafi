@@ -1761,4 +1761,145 @@ function get_order_by_number($order_number) {
         return null;
     }
 }
+
+// ==================== FILTERING FUNCTIONS ====================
+
+// Get filtered and paginated products
+function get_products_filtered($params = [], $limit = 12, $offset = 0)
+{
+    global $pdo;
+    if (!db_has_connection()) return [];
+
+    try {
+        $sql = "SELECT p.*, 
+                       COALESCE(p.sale_price, p.price) as display_price,
+                       GROUP_CONCAT(c.name SEPARATOR ', ') as categories,
+                       (SELECT pi.file_path FROM product_images pi WHERE pi.product_id = p.id ORDER BY `order` ASC, id ASC LIMIT 1) AS image_path
+                FROM products p 
+                LEFT JOIN product_category pc ON p.id = pc.product_id
+                LEFT JOIN categories c ON pc.category_id = c.id
+                WHERE p.is_active = 1";
+
+        $binds = [];
+
+        // Search query
+        if (!empty($params['q'])) {
+            $sql .= " AND (p.name LIKE :q OR p.description LIKE :q OR p.sku LIKE :q)";
+            $binds[':q'] = '%' . $params['q'] . '%';
+        }
+
+        // Category filter (array of IDs)
+        if (!empty($params['categories']) && is_array($params['categories'])) {
+            $cat_placeholders = [];
+            foreach ($params['categories'] as $i => $cid) {
+                $key = ':cat' . $i;
+                $cat_placeholders[] = $key;
+                $binds[$key] = (int)$cid;
+            }
+            $sql .= " AND pc.category_id IN (" . implode(', ', $cat_placeholders) . ")";
+        }
+
+        // Price range
+        if (isset($params['min_price']) && is_numeric($params['min_price'])) {
+            $sql .= " AND (COALESCE(p.sale_price, p.price) >= :min_price)";
+            $binds[':min_price'] = (float)$params['min_price'];
+        }
+        if (isset($params['max_price']) && is_numeric($params['max_price'])) {
+            $sql .= " AND (COALESCE(p.sale_price, p.price) <= :max_price)";
+            $binds[':max_price'] = (float)$params['max_price'];
+        }
+
+        $sql .= " GROUP BY p.id";
+
+        // Sorting
+        $sort = $params['sort'] ?? 'newest';
+        switch ($sort) {
+            case 'price_low_high':
+                $sql .= " ORDER BY display_price ASC, p.created_at DESC";
+                break;
+            case 'price_high_low':
+                $sql .= " ORDER BY display_price DESC, p.created_at DESC";
+                break;
+            case 'name_a_z':
+                $sql .= " ORDER BY p.name ASC";
+                break;
+            case 'name_z_a':
+                $sql .= " ORDER BY p.name DESC";
+                break;
+            case 'newest':
+            default:
+                $sql .= " ORDER BY p.created_at DESC";
+                break;
+        }
+
+        if ($limit > 0) {
+            $sql .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+        }
+
+        $stmt = $pdo->prepare($sql);
+        foreach ($binds as $key => $val) {
+            $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        log_pdo_exception($e, isset($sql) ? $sql : null, __FUNCTION__);
+        return [];
+    }
+}
+
+// Get total count of filtered products for pagination
+function get_products_filtered_count($params = [])
+{
+    global $pdo;
+    if (!db_has_connection()) return 0;
+
+    try {
+        $sql = "SELECT COUNT(DISTINCT p.id) 
+                FROM products p 
+                LEFT JOIN product_category pc ON p.id = pc.product_id
+                WHERE p.is_active = 1";
+
+        $binds = [];
+
+        // Search query
+        if (!empty($params['q'])) {
+            $sql .= " AND (p.name LIKE :q OR p.description LIKE :q OR p.sku LIKE :q)";
+            $binds[':q'] = '%' . $params['q'] . '%';
+        }
+
+        // Category filter
+        if (!empty($params['categories']) && is_array($params['categories'])) {
+            $cat_placeholders = [];
+            foreach ($params['categories'] as $i => $cid) {
+                $key = ':cat' . $i;
+                $cat_placeholders[] = $key;
+                $binds[$key] = (int)$cid;
+            }
+            $sql .= " AND pc.category_id IN (" . implode(', ', $cat_placeholders) . ")";
+        }
+
+        // Price range
+        if (isset($params['min_price']) && is_numeric($params['min_price'])) {
+            $sql .= " AND (COALESCE(p.sale_price, p.price) >= :min_price)";
+            $binds[':min_price'] = (float)$params['min_price'];
+        }
+        if (isset($params['max_price']) && is_numeric($params['max_price'])) {
+            $sql .= " AND (COALESCE(p.sale_price, p.price) <= :max_price)";
+            $binds[':max_price'] = (float)$params['max_price'];
+        }
+
+        $stmt = $pdo->prepare($sql);
+        foreach ($binds as $key => $val) {
+            $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    } catch (PDOException $e) {
+        log_pdo_exception($e, isset($sql) ? $sql : null, __FUNCTION__);
+        return 0;
+    }
+}
 ?>
