@@ -4,7 +4,7 @@
         <h2 class="section-title">Collections</h2>
         <p class="section-subtitle">Explore our distinguished product categories</p>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             <div class="col-lg-4 col-md-6">
                 <a href="index.php?page=products&category=electronics" class="category-card d-block text-decoration-none">
                     <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=70" alt="Electronics collection" loading="lazy" decoding="async" fetchpriority="low">
