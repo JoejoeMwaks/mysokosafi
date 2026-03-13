@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --primary: #0f2a44;
     --primary-light: #1c3d5a;
     --primary-dark: #081624;
@@ -669,6 +669,28 @@ html {
 
 .product-card:hover .product-image {
     transform: scale(1.05);
+}
+
+/* Mobile Optimizations for Product Cards */
+@media (max-width: 576px) {
+    .product-image {
+        height: 160px; /* Reduced from 300px to prevent elongation on small screens */
+    }
+    .product-card .card-body {
+        padding: 1rem !important; /* Reduce inner spacing */
+    }
+    .product-card .card-title {
+        font-size: 0.9rem !important; /* Slightly smaller text for grid fitting */
+        margin-bottom: 0.5rem !important;
+    }
+    .product-card .price-tag {
+        font-size: 1.1rem !important; /* Smaller text */
+    }
+    .product-card .btn {
+        width: 32px !important; /* Make the cart button smaller */
+        height: 32px !important;
+        font-size: 0.8rem;
+    }
 }
 
 .product-badge {
