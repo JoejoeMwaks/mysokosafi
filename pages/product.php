@@ -3,6 +3,7 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../includes/db_functions.php';
 $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 $product = ($id && db_has_connection()) ? get_product_by_id($id) : null;
+$product_images = ($id && db_has_connection()) ? get_product_images($id) : [];
 $cart_error = $cart_error ?? null; // Provided by index.php when POST fails
 
 // Get related products for recommendation
