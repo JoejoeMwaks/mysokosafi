@@ -35,7 +35,7 @@ catch (Exception $e) {
                 </div>
             </div>
             <div class="col-lg-6">
-                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                      alt="Premium Collection" 
                      class="img-fluid text-center w-100"
                      loading="lazy"
