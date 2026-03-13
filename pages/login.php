@@ -66,7 +66,7 @@ endif; ?>
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me" value="1">
+                                <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me" value="1" checked>
                                 <label class="form-check-label text-muted" style="font-size: 0.9rem;" for="remember_me">Remember me for 7 days</label>
                             </div>
                             <a href="index.php?page=forgot_password" class="text-primary text-decoration-none fw-semibold" style="font-size: 0.9rem;">Forgot Password?</a>
