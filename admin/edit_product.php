@@ -218,7 +218,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
                         
                         <!-- Actions -->
                         <div class="d-flex gap-3 align-items-center border-top pt-3 mt-2">
-                            <a href="admin/edit_product.php?id=<?php echo $p['id']; ?>" class="text-primary text-decoration-none fw-bold"><i class="bi bi-pencil"></i> Edit</a>
+                            <a href="edit_product.php?id=<?php echo $p['id']; ?>" class="text-primary text-decoration-none fw-bold"><i class="bi bi-pencil"></i> Edit</a>
                             
                             <form method="post" class="m-0 p-0" onsubmit="return confirm('Are you sure you want to completely delete this product?');">
                                 <input type="hidden" name="id" value="<?php echo $p['id']; ?>">
