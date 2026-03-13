@@ -632,10 +632,22 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             
             const imgBounds = zoomImage.getBoundingClientRect();
             
+            let renderedWidth = imgBounds.width;
+            let renderedHeight = imgBounds.height;
+            if (zoomImage.naturalWidth && zoomImage.naturalHeight) {
+                let imgRatio = zoomImage.naturalWidth / zoomImage.naturalHeight;
+                let containerRatio = imgBounds.width / imgBounds.height;
+                if (imgRatio > containerRatio) {
+                    renderedHeight = imgBounds.width / imgRatio;
+                } else {
+                    renderedWidth = imgBounds.height * imgRatio;
+                }
+            }
+            
             // Calculate dynamic zoom ratio for better quality
             computedRatio = baseRatio;
-            if (zoomImage.naturalWidth && zoomImage.naturalWidth > imgBounds.width) {
-                 let natRatio = zoomImage.naturalWidth / imgBounds.width;
+            if (zoomImage.naturalWidth && zoomImage.naturalWidth > renderedWidth) {
+                 let natRatio = zoomImage.naturalWidth / renderedWidth;
                  computedRatio = Math.max(2.0, Math.min(natRatio, 3.5));
             }
             
@@ -646,9 +658,7 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             zoomLens.style.width = lensWidth + 'px';
             zoomLens.style.height = lensHeight + 'px';
             
-            const realImgWidth = imgBounds.width;
-            const realImgHeight = imgBounds.height;
-            zoomWindow.style.backgroundSize = `${realImgWidth * computedRatio}px ${realImgHeight * computedRatio}px`;
+            zoomWindow.style.backgroundSize = `${renderedWidth * computedRatio}px ${renderedHeight * computedRatio}px`;
         }
     });
 
@@ -657,8 +667,25 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             const bounds = zoomContainer.getBoundingClientRect();
             const imgBounds = zoomImage.getBoundingClientRect();
             
-            let x = e.clientX - imgBounds.left;
-            let y = e.clientY - imgBounds.top;
+            let renderedWidth = imgBounds.width;
+            let renderedHeight = imgBounds.height;
+            let renderOffsetX = 0;
+            let renderOffsetY = 0;
+
+            if (zoomImage.naturalWidth && zoomImage.naturalHeight) {
+                let imgRatio = zoomImage.naturalWidth / zoomImage.naturalHeight;
+                let containerRatio = imgBounds.width / imgBounds.height;
+                if (imgRatio > containerRatio) {
+                    renderedHeight = imgBounds.width / imgRatio;
+                    renderOffsetY = (imgBounds.height - renderedHeight) / 2;
+                } else {
+                    renderedWidth = imgBounds.height * imgRatio;
+                    renderOffsetX = (imgBounds.width - renderedWidth) / 2;
+                }
+            }
+            
+            let x = e.clientX - imgBounds.left - renderOffsetX;
+            let y = e.clientY - imgBounds.top - renderOffsetY;
             
             let lensX = x - (zoomLens.offsetWidth / 2);
             let lensY = y - (zoomLens.offsetHeight / 2);
@@ -666,15 +693,15 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             // Clamp lens
             if (lensX < 0) lensX = 0;
             if (lensY < 0) lensY = 0;
-            if (lensX > imgBounds.width - zoomLens.offsetWidth) lensX = imgBounds.width - zoomLens.offsetWidth;
-            if (lensY > imgBounds.height - zoomLens.offsetHeight) lensY = imgBounds.height - zoomLens.offsetHeight;
+            if (lensX > renderedWidth - zoomLens.offsetWidth) lensX = renderedWidth - zoomLens.offsetWidth;
+            if (lensY > renderedHeight - zoomLens.offsetHeight) lensY = renderedHeight - zoomLens.offsetHeight;
             
-            // The lens position inside the container vs the image position inside the container
-            let offsetX = imgBounds.left - bounds.left;
-            let offsetY = imgBounds.top - bounds.top;
+            // The lens position inside the container DOM element
+            let domOffsetX = (imgBounds.left - bounds.left) + renderOffsetX;
+            let domOffsetY = (imgBounds.top - bounds.top) + renderOffsetY;
             
-            zoomLens.style.left = (lensX + offsetX) + 'px';
-            zoomLens.style.top = (lensY + offsetY) + 'px';
+            zoomLens.style.left = (lensX + domOffsetX) + 'px';
+            zoomLens.style.top = (lensY + domOffsetY) + 'px';
             
             // Pan zoom window
             zoomWindow.style.backgroundPosition = `-${lensX * computedRatio}px -${lensY * computedRatio}px`;
