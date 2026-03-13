@@ -70,7 +70,7 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
                              class="img-fluid product-image"
                              style="max-height: 100%; object-fit: contain; width: 100%; border-radius: 8px;"
                              onerror="this.src='https://dummyimage.com/800x800/e0e0e0/636363.jpg&text=No+Image'">
-                        <div id="zoom-window" class="border rounded-3 bg-white" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-repeat: no-repeat; display: none; z-index: 1050; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); image-rendering: high-quality; image-rendering: -webkit-optimize-contrast;"></div>
+                        <div id="zoom-window" class="border rounded-3 bg-white" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-repeat: no-repeat; display: none; z-index: 1050; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); image-rendering: auto;"></div>
                     </div>
                     <!-- Thumbnails moved to left -->
                 </div>
@@ -619,8 +619,9 @@ const zoomLens = document.getElementById('zoom-lens');
 const zoomWindow = document.getElementById('zoom-window');
 
 if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
-    const ratio = 2.5; // Zoom magnification ratio
+    const baseRatio = 2.5; // Base Zoom magnification ratio
     let isHovering = false;
+    let computedRatio = baseRatio;
     
     zoomContainer.addEventListener('mouseenter', function() {
         if (window.innerWidth >= 992) {
@@ -631,16 +632,23 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             
             const imgBounds = zoomImage.getBoundingClientRect();
             
+            // Calculate dynamic zoom ratio for better quality
+            computedRatio = baseRatio;
+            if (zoomImage.naturalWidth && zoomImage.naturalWidth > imgBounds.width) {
+                 let natRatio = zoomImage.naturalWidth / imgBounds.width;
+                 computedRatio = Math.max(2.0, Math.min(natRatio, 3.5));
+            }
+            
             // Lens size relates to the original image dimensions vs zoom window dimensions
-            const lensWidth = zoomWindow.offsetWidth / ratio;
-            const lensHeight = zoomWindow.offsetHeight / ratio;
+            const lensWidth = zoomWindow.offsetWidth / computedRatio;
+            const lensHeight = zoomWindow.offsetHeight / computedRatio;
             
             zoomLens.style.width = lensWidth + 'px';
             zoomLens.style.height = lensHeight + 'px';
             
             const realImgWidth = imgBounds.width;
             const realImgHeight = imgBounds.height;
-            zoomWindow.style.backgroundSize = `${realImgWidth * ratio}px ${realImgHeight * ratio}px`;
+            zoomWindow.style.backgroundSize = `${realImgWidth * computedRatio}px ${realImgHeight * computedRatio}px`;
         }
     });
 
@@ -669,7 +677,7 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             zoomLens.style.top = (lensY + offsetY) + 'px';
             
             // Pan zoom window
-            zoomWindow.style.backgroundPosition = `-${lensX * ratio}px -${lensY * ratio}px`;
+            zoomWindow.style.backgroundPosition = `-${lensX * computedRatio}px -${lensY * computedRatio}px`;
         }
     });
     
