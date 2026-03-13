@@ -674,22 +674,48 @@ html {
 /* Mobile Optimizations for Product Cards */
 @media (max-width: 576px) {
     .product-image {
-        height: 160px; /* Reduced from 300px to prevent elongation on small screens */
+        height: 180px; /* Slightly larger than 160px for better visibility */
     }
     .product-card .card-body {
-        padding: 1rem !important; /* Reduce inner spacing */
+        padding: 0.75rem !important; /* Reduce inner spacing */
     }
-    .product-card .card-title {
-        font-size: 0.9rem !important; /* Slightly smaller text for grid fitting */
-        margin-bottom: 0.5rem !important;
+    .product-card .card-title,
+    .product-card .card-title a {
+        font-size: 0.85rem !important; /* Smaller text for grid fitting */
+        margin-bottom: 0.25rem !important;
+        line-height: 1.2;
     }
-    .product-card .price-tag {
-        font-size: 1.1rem !important; /* Smaller text */
+    
+    /* Make prices smaller and wrap if necessary */
+    .product-card .fs-5 {
+        font-size: 1rem !important; 
     }
-    .product-card .btn {
-        width: 32px !important; /* Make the cart button smaller */
+    .product-card .fw-bold.text-primary {
+        font-size: 0.9rem !important;
+        display: block;
+    }
+    .product-card .text-decoration-line-through {
+        font-size: 0.75rem !important;
+        display: block;
+    }
+    
+    /* Target only the circular icon button in shop grid, NOT the home page Add to Cart button */
+    .product-card .btn.rounded-circle {
+        width: 32px !important; 
         height: 32px !important;
         font-size: 0.8rem;
+    }
+    
+    /* For the home page button, ensure it fits */
+    .product-card .btn.w-100 {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.2rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .product-card .btn.w-100 i {
+        display: none; /* Hide the icon on small screens to save space */
     }
 }
 
