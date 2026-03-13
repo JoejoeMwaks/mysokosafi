@@ -189,12 +189,111 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
         
-        <div>
-            <label class="form-label">Product Images (up to 10)</label>
-            <input type="file" name="images[]" class="form-control" accept="image/*" multiple max="10">
+        <div class="card p-3 mb-4">
+            <h5 class="mb-1 text-dark">Product Images (up to 10)</h5>
+            <p class="text-success small mb-3">First picture is the title picture. Supported formats are *.jpg and *.png</p>
+            
+            <div id="image-gallery-container" class="d-flex flex-wrap gap-2 mb-2">
+                <!-- ADD BUTTON -->
+                <div id="add-image-btn" class="border rounded d-flex align-items-center justify-content-center bg-light" style="width: 100px; height: 100px; cursor: pointer; border-style: dashed !important; border-width: 2px !important;">
+                    <span class="fs-1 text-success">+</span>
+                </div>
+            </div>
+            
+            <div id="hidden-inputs-container">
+                <!-- Hidden file inputs go here -->
+            </div>
         </div>
         
-        <button type="submit" class="btn btn-primary">Add Product</button>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addBtn = document.getElementById('add-image-btn');
+            const galleryContainer = document.getElementById('image-gallery-container');
+            const inputsContainer = document.getElementById('hidden-inputs-container');
+            let currentImageCount = 0;
+            const maxImages = 10;
+
+            function checkImageLimit() {
+                if (currentImageCount >= maxImages) {
+                    addBtn.style.display = 'none';
+                } else {
+                    addBtn.style.display = 'flex';
+                }
+            }
+
+            addBtn.addEventListener('click', function() {
+                if (currentImageCount >= maxImages) {
+                    alert('You can only upload up to 10 images.');
+                    return;
+                }
+
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'images[]';
+                input.accept = 'image/jpeg, image/png';
+                input.className = 'd-none hidden-file-input';
+                
+                input.addEventListener('change', function(e) {
+                    if (this.files && this.files[0]) {
+                        const file = this.files[0];
+                        if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+                            alert('Only JPG and PNG formats are supported.');
+                            this.remove();
+                            return;
+                        }
+
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'position-relative border rounded overflow-hidden preview-box';
+                        previewDiv.style.width = '100px';
+                        previewDiv.style.height = '100px';
+
+                        const img = document.createElement('img');
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(e) { img.src = e.target.result; };
+                        reader.readAsDataURL(file);
+
+                        const removeBtn = document.createElement('div');
+                        removeBtn.className = 'position-absolute top-0 end-0 bg-dark text-white rounded-circle d-flex align-items-center justify-content-center';
+                        removeBtn.style.width = '20px';
+                        removeBtn.style.height = '20px';
+                        removeBtn.style.cursor = 'pointer';
+                        removeBtn.style.margin = '4px';
+                        removeBtn.style.fontSize = '12px';
+                        removeBtn.innerHTML = '✕';
+                        
+                        removeBtn.addEventListener('click', function(evt) {
+                            evt.stopPropagation();
+                            previewDiv.remove();
+                            input.remove();
+                            currentImageCount--;
+                            checkImageLimit();
+                        });
+
+                        previewDiv.appendChild(img);
+                        previewDiv.appendChild(removeBtn);
+                        
+                        galleryContainer.insertBefore(previewDiv, addBtn);
+                        inputsContainer.appendChild(input);
+                        
+                        currentImageCount++;
+                        checkImageLimit();
+                    } else {
+                        // User canceled selection
+                        this.remove();
+                    }
+                });
+                input.click();
+            });
+        });
+        </script>
+        
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-success btn-lg py-3 fw-bold fs-5">Add Product</button>
+        </div>
     </form>
 </section>
 <?php include __DIR__ . '/../includes/footer.php'; ?>

@@ -59,6 +59,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
       $catIds = isset($_POST['category_ids']) ? (array)$_POST['category_ids'] : [];
       set_product_categories($id, $catIds);
 
+      // Process deleted existing images first
+      if (!empty($_POST['deleted_images']) && is_array($_POST['deleted_images'])) {
+          require_once __DIR__ . '/../config/cloudinary.php';
+          $uploadApi = new \Cloudinary\Api\Upload\UploadApi();
+          
+          foreach ($_POST['deleted_images'] as $del_img_id) {
+              $del_img_id = (int)$del_img_id;
+              
+              // Fetch the image path to delete it from Cloudinary/Local
+              $stmtDelFetch = $pdo->prepare("SELECT file_path FROM product_images WHERE id = ? AND product_id = ?");
+              $stmtDelFetch->execute([$del_img_id, $id]);
+              $delImgData = $stmtDelFetch->fetch();
+              
+              if ($delImgData) {
+                  $pathToDelete = $delImgData['file_path'];
+                  
+                  // Delete from Cloudinary if it's a Cloudinary URL
+                  if (str_starts_with($pathToDelete, 'http://res.cloudinary.com') || str_starts_with($pathToDelete, 'https://res.cloudinary.com')) {
+                      try {
+                          // Extract Public ID from URL (e.g., sokosafi/products/filename)
+                          $parsedUrl = parse_url($pathToDelete, PHP_URL_PATH);
+                          $pathParts = explode('/upload/', $parsedUrl);
+                          if (isset($pathParts[1])) {
+                              // remove version number if exists
+                              $publicIdWithExt = preg_replace('/^v\d+\//', '', $pathParts[1]);
+                              $publicId = pathinfo($publicIdWithExt, PATHINFO_DIRNAME) . '/' . pathinfo($publicIdWithExt, PATHINFO_FILENAME);
+                              $uploadApi->destroy($publicId);
+                          }
+                      } catch (\Exception $e) {
+                          error_log("Failed to delete from Cloudinary: " . $e->getMessage());
+                      }
+                  }
+                  
+                  // Also try to delete local file fallback just in case
+                  $localFilePath = __DIR__ . '/../' . $pathToDelete;
+                  if (file_exists($localFilePath) && !is_dir($localFilePath)) {
+                      @unlink($localFilePath);
+                  }
+                  
+                  // Delete from Database
+                  $pdo->prepare("DELETE FROM product_images WHERE id = ?")->execute([$del_img_id]);
+              }
+          }
+      }
+
       // Handle new images upload directly to Cloudinary
       if (isset($_FILES['new_images']) && is_array($_FILES['new_images']['name'])) {
           require_once __DIR__ . '/../config/cloudinary.php';
@@ -118,9 +163,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
                       }
                       $order_idx++;
                   }
-              }
-          }
-      }
+              } // End of if (UPLOAD_ERR_OK)
+          } // End of for loop
+      } // End of if (isset($_FILES['new_images']))
     } catch (Throwable $e) {
       $message = 'Error: ' . $e->getMessage();
     }
@@ -133,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && db_has_connection()) {
       $message = 'Error: ' . $e->getMessage();
     }
   }
-}
+} // End of if ($_SERVER['REQUEST_METHOD'] === 'POST')
 $products = db_has_connection() ? get_products(null, null) : [];
 ?>
 
@@ -431,6 +476,7 @@ $products = db_has_connection() ? get_products(null, null) : [];
     });
     </script>
     <?php endif; ?>
+    <?php endif; ?> <!-- Second endif -->
 
 </section>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
