@@ -66,6 +66,18 @@
                     </div>
                 </a>
             </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="index.php?page=products&category=gaming" class="category-card d-block text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                         alt="Gaming collection"
+                         loading="lazy" decoding="async" fetchpriority="low"
+                         onerror="this.onerror=null;this.src='https://picsum.photos/seed/gaming-collection/800/600';">
+                    <div class="category-content">
+                        <h4 class="fw-bold">Gaming</h4>
+                        <p class="mb-0">Next-level entertainment</p>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </section>
