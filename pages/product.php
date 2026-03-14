@@ -67,10 +67,10 @@ $show_reviews_tab = isset($_SESSION['review_success']) || isset($_SESSION['revie
                         <img src="<?php echo $main_img_url; ?>" 
                              alt="<?php echo htmlspecialchars($product['name']); ?>"
                              id="mainProductImage"
-                             class="img-fluid product-image"
+                             class="img-fluid main-product-image"
                              style="max-height: 100%; object-fit: contain; width: 100%; border-radius: 8px;"
                              onerror="this.src='https://dummyimage.com/800x800/e0e0e0/636363.jpg&text=No+Image'">
-                        <div id="zoom-window" class="border rounded-3 bg-white" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-repeat: no-repeat; display: none; z-index: 1050; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); image-rendering: auto;"></div>
+                        <div id="zoom-window" class="border rounded-3 shadow-lg" style="position: absolute; left: calc(100% + 1.5rem); top: 0; width: 100%; height: 500px; background-color: #fff; background-repeat: no-repeat; display: none; z-index: 2000; pointer-events: none; border: 1px solid rgba(0,0,0,0.1) !important;"></div>
                     </div>
                     <!-- Thumbnails moved to left -->
                 </div>
@@ -623,51 +623,56 @@ const zoomLens = document.getElementById('zoom-lens');
 const zoomWindow = document.getElementById('zoom-window');
 
 if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
-    const baseRatio = 2.5; // Base Zoom magnification ratio
+    const baseRatio = 2.5; 
     let isHovering = false;
     let computedRatio = baseRatio;
     
+    function showZoom() {
+        if (!isHovering || window.innerWidth < 992) return;
+        
+        zoomWindow.style.display = 'block';
+        zoomLens.style.display = 'block';
+        zoomWindow.style.backgroundImage = `url('${zoomImage.src}')`;
+        
+        const imgBounds = zoomImage.getBoundingClientRect();
+        let renderedWidth = imgBounds.width;
+        let renderedHeight = imgBounds.height;
+
+        if (zoomImage.naturalWidth && zoomImage.naturalHeight) {
+            let imgRatio = zoomImage.naturalWidth / zoomImage.naturalHeight;
+            let containerRatio = imgBounds.width / imgBounds.height;
+            if (imgRatio > containerRatio) {
+                renderedHeight = imgBounds.width / imgRatio;
+            } else {
+                renderedWidth = imgBounds.height * imgRatio;
+            }
+            
+            // Calculate dynamic zoom ratio
+            computedRatio = Math.max(2.0, Math.min(zoomImage.naturalWidth / renderedWidth, 3.5));
+        } else {
+            computedRatio = baseRatio;
+        }
+
+        const lensWidth = zoomWindow.offsetWidth / computedRatio;
+        const lensHeight = zoomWindow.offsetHeight / computedRatio;
+        
+        zoomLens.style.width = lensWidth + 'px';
+        zoomLens.style.height = lensHeight + 'px';
+        zoomWindow.style.backgroundSize = `${renderedWidth * computedRatio}px ${renderedHeight * computedRatio}px`;
+    }
+
     zoomContainer.addEventListener('mouseenter', function() {
         if (window.innerWidth >= 992) {
             isHovering = true;
-            zoomLens.style.display = 'block';
-            zoomWindow.style.display = 'block';
-            zoomWindow.style.backgroundImage = `url('${zoomImage.src}')`;
-            
-            const imgBounds = zoomImage.getBoundingClientRect();
-            
-            let renderedWidth = imgBounds.width;
-            let renderedHeight = imgBounds.height;
-            if (zoomImage.naturalWidth && zoomImage.naturalHeight) {
-                let imgRatio = zoomImage.naturalWidth / zoomImage.naturalHeight;
-                let containerRatio = imgBounds.width / imgBounds.height;
-                if (imgRatio > containerRatio) {
-                    renderedHeight = imgBounds.width / imgRatio;
-                } else {
-                    renderedWidth = imgBounds.height * imgRatio;
-                }
-            }
-            
-            // Calculate dynamic zoom ratio for better quality
-            computedRatio = baseRatio;
-            if (zoomImage.naturalWidth && zoomImage.naturalWidth > renderedWidth) {
-                 let natRatio = zoomImage.naturalWidth / renderedWidth;
-                 computedRatio = Math.max(2.0, Math.min(natRatio, 3.5));
-            }
-            
-            // Lens size relates to the original image dimensions vs zoom window dimensions
-            const lensWidth = zoomWindow.offsetWidth / computedRatio;
-            const lensHeight = zoomWindow.offsetHeight / computedRatio;
-            
-            zoomLens.style.width = lensWidth + 'px';
-            zoomLens.style.height = lensHeight + 'px';
-            
-            zoomWindow.style.backgroundSize = `${renderedWidth * computedRatio}px ${renderedHeight * computedRatio}px`;
+            // Use requestAnimationFrame to ensure display:block has taken effect for offsetWidth/Height
+            requestAnimationFrame(showZoom);
         }
     });
 
     zoomContainer.addEventListener('mousemove', function(e) {
         if (isHovering && window.innerWidth >= 992) {
+            if (zoomWindow.style.display === 'none') showZoom();
+            
             const bounds = zoomContainer.getBoundingClientRect();
             const imgBounds = zoomImage.getBoundingClientRect();
             
@@ -700,14 +705,14 @@ if (zoomContainer && zoomImage && zoomLens && zoomWindow) {
             if (lensX > renderedWidth - zoomLens.offsetWidth) lensX = renderedWidth - zoomLens.offsetWidth;
             if (lensY > renderedHeight - zoomLens.offsetHeight) lensY = renderedHeight - zoomLens.offsetHeight;
             
-            // The lens position inside the container DOM element
+            // Pan lens
             let domOffsetX = (imgBounds.left - bounds.left) + renderOffsetX;
             let domOffsetY = (imgBounds.top - bounds.top) + renderOffsetY;
             
             zoomLens.style.left = (lensX + domOffsetX) + 'px';
             zoomLens.style.top = (lensY + domOffsetY) + 'px';
             
-            // Pan zoom window
+            // Pan zoom image
             zoomWindow.style.backgroundPosition = `-${lensX * computedRatio}px -${lensY * computedRatio}px`;
         }
     });
