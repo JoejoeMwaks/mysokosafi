@@ -11,7 +11,7 @@ $next = isset($_GET['next']) ? $_GET['next'] : null;
             <div class="text-center mb-5">
                 <div class="elegant-icon mb-4">
                     <div class="icon-wrapper">
-                        <img src="https://res.cloudinary.com/dmnbjskbz/image/upload/v1771605277/sokosafi/logo.png" alt="Logo" style="width: 60%; height: auto;">
+                        <img src="https://res.cloudinary.com/dmnbjskbz/image/upload/v1773442661/sokosafi/logo.png" alt="Logo" style="width:80px;height:auto;">
                     </div>
                 </div>
                 <h1 class="h2 fw-bold text-dark mb-3">Welcome Back</h1>

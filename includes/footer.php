@@ -6,67 +6,65 @@ if (!isset($base)) {
 }
 ?>
     <!-- ***** Footer ***** -->
-    <footer id="footer" style="background: #0b1220; color: #e5e7eb; padding: 4rem 0 2rem; border-top: 1px solid #1f2937;">
+    <footer id="footer" class="glass-footer">
         <div class="container">
-            <div class="row gy-4">
+            <div class="row gy-5">
                 <div class="col-lg-4 col-md-6">
-                    <div class="mb-3">
-                        <a href="<?php echo $base; ?>/index.php" class="d-flex align-items-center text-decoration-none">
-                             <img src="https://res.cloudinary.com/dmnbjskbz/image/upload/v1771605277/sokosafi/logo.png" alt="logo" height="38" class="me-2">
-                             <span class="footer-brand h5 fw-bold text-white mb-0">SokoSafi</span>
+                    <div class="mb-4">
+                        <a href="<?php echo $base; ?>/index.php" class="d-flex align-items-center gap-2 text-decoration-none">
+                            <img src="<?php echo $base; ?>/assets/images/logo.png" alt="logo" style="height: 24px !important; width: auto !important;">
+                            <span class="text-white fw-bold" style="font-size: 0.95rem; letter-spacing: 0.02em;">SokoSafi</span>
                         </a>
                     </div>
-                    <p class="small text-secondary mb-4">Your destination for premium products and exceptional shopping experiences. Quality and sophistication redefined.</p>
+                    <p class="small mb-4" style="color:rgba(255,255,255,0.55); line-height:1.75;">Your destination for premium products and exceptional shopping experiences. Quality and sophistication redefined.</p>
                     <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;padding:0;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;padding:0;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;padding:0;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width:36px;height:36px;padding:0;"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-md-3 col-6">
-                    <h6 class="text-white fw-bold mb-3">Collections</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=products" class="text-secondary text-decoration-none hover-white">All Products</a></li>
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=featured" class="text-secondary text-decoration-none hover-white">Featured</a></li>
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=new_arrivals" class="text-secondary text-decoration-none hover-white">New Arrivals</a></li>
+                    <h6 class="mb-3 text-white fw-bold" style="letter-spacing:0.05em;font-size:0.8rem;text-transform:uppercase;">Collections</h6>
+                    <ul class="list-unstyled small" style="line-height:2;">
+                        <li><a href="<?php echo $base; ?>/index.php?page=products" class="text-secondary text-decoration-none hover-white">All Products</a></li>
+                        <li><a href="<?php echo $base; ?>/index.php?page=featured"  class="text-secondary text-decoration-none hover-white">Featured</a></li>
+                        <li><a href="<?php echo $base; ?>/index.php?page=new_arrivals" class="text-secondary text-decoration-none hover-white">New Arrivals</a></li>
                     </ul>
                 </div>
 
                 <div class="col-lg-2 col-md-3 col-6">
-                    <h6 class="text-white fw-bold mb-3">Support</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=faq" class="text-secondary text-decoration-none hover-white">FAQ</a></li>
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=shipping" class="text-secondary text-decoration-none hover-white">Shipping</a></li>
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=returns" class="text-secondary text-decoration-none hover-white">Returns</a></li>
-                        <li class="mb-2"><a href="<?php echo $base; ?>/index.php?page=contact" class="text-secondary text-decoration-none hover-white">Contact Us</a></li>
+                    <h6 class="mb-3 text-white fw-bold" style="letter-spacing:0.05em;font-size:0.8rem;text-transform:uppercase;">Support</h6>
+                    <ul class="list-unstyled small" style="line-height:2;">
+                        <li><a href="<?php echo $base; ?>/index.php?page=faq"      class="text-secondary text-decoration-none hover-white">FAQ</a></li>
+                        <li><a href="<?php echo $base; ?>/index.php?page=shipping"  class="text-secondary text-decoration-none hover-white">Shipping</a></li>
+                        <li><a href="<?php echo $base; ?>/index.php?page=returns"   class="text-secondary text-decoration-none hover-white">Returns</a></li>
+                        <li><a href="<?php echo $base; ?>/index.php?page=contact"   class="text-secondary text-decoration-none hover-white">Contact Us</a></li>
                     </ul>
                 </div>
 
                 <div class="col-lg-4 col-md-6">
-                    <h6 class="text-white fw-bold mb-3">Get in Touch</h6>
-                    <ul class="list-unstyled small text-secondary">
-                        <li class="mb-2 d-flex"><i class="fas fa-map-marker-alt mt-1 me-2 text-primary"></i> <span>Nairobi, Kenya</span></li>
-                        <li class="mb-2 d-flex"><i class="fas fa-phone mt-1 me-2 text-primary"></i> <span>0758549123</span></li>
-                        <li class="mb-2 d-flex"><i class="fas fa-envelope mt-1 me-2 text-primary"></i> <span>support@synora.dev</span></li>
+                    <h6 class="mb-3 text-white fw-bold" style="letter-spacing:0.05em;font-size:0.8rem;text-transform:uppercase;">Get in Touch</h6>
+                    <ul class="list-unstyled small" style="color:rgba(255,255,255,0.55); line-height:2.1;">
+                        <li class="d-flex align-items-start gap-2"><i class="fas fa-map-marker-alt mt-1" style="color:var(--accent);"></i><span>Nairobi, Kenya</span></li>
+                        <li class="d-flex align-items-start gap-2"><i class="fas fa-phone mt-1" style="color:var(--accent);"></i><span>0758549123</span></li>
+                        <li class="d-flex align-items-start gap-2"><i class="fas fa-envelope mt-1" style="color:var(--accent);"></i><span>support@synora.dev</span></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-top border-secondary mt-4 pt-4">
-                <div class="row align-items-center">
-                    <div class="col-12 text-center">
-                        <p class="small text-secondary mb-2">&copy; 2026 Synora Systems. All rights reserved.</p>
-                        <img src="<?php echo $base; ?>/assets/images/payment-methods.png" alt="Payment Methods" height="24" onerror="this.style.display='none'">
-                    </div>
+            <div class="mt-5 pt-4" style="border-top:1px solid rgba(255,255,255,0.07);">
+                <div class="text-center">
+                    <p class="small mb-2" style="color:rgba(255,255,255,0.35);">&copy; 2026 Synora Systems. All rights reserved.</p>
+                    <img src="<?php echo $base; ?>/assets/images/payment-methods.png" alt="Payment Methods" height="22" onerror="this.style.display='none'">
                 </div>
             </div>
         </div>
     </footer>
-    
+
     <style>
-        .hover-white:hover { color: #fff !important; transition: color 0.2s; }
+      .hover-white:hover { color: #fff !important; transition: color 0.2s; }
     </style>
 
     <!-- Vendor scripts -->
