@@ -267,7 +267,7 @@ body {
   display: none !important;
 }
 
-/* Ensure logo image is sized appropriately without wrapper constraints */
+/* Ensure logo image is sized appropriately on auth pages without wrapper constraints */
 .elegant-icon .icon-wrapper img {
   width: 180px !important;
   max-width: 100% !important;

@@ -110,6 +110,12 @@
 /* ─── 4. GLOBAL BASE ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Global Image Safety */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -678,21 +684,40 @@ img { max-width: 100%; height: auto; }
 
 .offcanvas-header {
   border-bottom: 1px solid var(--glass-border) !important;
-  padding: 1.25rem 1.5rem !important;
+  padding: 0.75rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* Force offcanvas logo size with high specificity to override broad rules */
+.offcanvas-header .d-flex .offcanvas-logo,
+.offcanvas .offcanvas-logo {
+  height: 28px !important;
+  width: auto !important;
+  min-width: unset !important;
+  max-width: 120px !important; /* Cap width just in case */
+  object-fit: contain !important;
 }
 
 .offcanvas-title { color: var(--on-surface); font-weight: 700; }
 
-.offcanvas-body { padding: 1.5rem !important; }
+.offcanvas-body { 
+  padding: 1rem !important; 
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
 .offcanvas .nav-link-custom {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 0.75rem !important;
+  gap: 0.8rem;
+  padding: 0.85rem 1rem !important;
   font-size: 0.95rem;
   border-radius: var(--radius-sm);
   width: 100%;
+  margin-bottom: 0.25rem;
 }
 
 .offcanvas .nav-link-custom::after { display: none; }
@@ -707,8 +732,11 @@ img { max-width: 100%; height: auto; }
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-radius: var(--radius-sm) !important;
-  margin-top: 0.25rem !important;
-  padding: 0.25rem !important;
+  margin-top: 0.5rem !important;
+  padding: 0.5rem !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 /* Mobile search in offcanvas */

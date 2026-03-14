@@ -92,7 +92,7 @@ endif; ?>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
       <div class="offcanvas-header">
         <div class="d-flex align-items-center gap-2">
-          <img src="<?php echo $base; ?>/assets/images/logo.png" alt="logo" height="28" onerror="this.style.display='none'">
+          <img src="<?php echo $base; ?>/assets/images/logo.png" alt="logo" class="offcanvas-logo" onerror="this.style.display='none'">
           <h5 class="offcanvas-title mb-0 fw-bold" id="mobileMenuLabel">SokoSafi</h5>
         </div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
