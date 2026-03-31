@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/db_functions.php';
 
 if (!db_has_connection()) {
     die("Database connection failed.");
