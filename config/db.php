@@ -23,6 +23,9 @@ try {
     $pdo = new PDO($dsn, DB_USER, DB_PASS, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_TIMEOUT => 5, // Fallback quickly if connection hangs
+        PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt', // Required for strict SSL hosts like Aiven
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
     ]);
 }
 catch (Throwable $e) {
