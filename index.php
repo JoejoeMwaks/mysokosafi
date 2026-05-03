@@ -34,7 +34,7 @@ if (!isset($_SESSION['user']) && isset($_COOKIE['remember_token'])) {
 
 // Basic router
 $page = $_GET['page'] ?? 'home';
-$allowed = ['home','product','products','cart','checkout','login','register','logout','mpesa_pay','mpesa_callback','cart_add','contact','faq','shipping','returns','featured','new_arrivals','forgot_password','reset_password','google_oauth','profile','track_order'];
+$allowed = ['home','product','products','cart','checkout','login','register','logout','mpesa_pay','mpesa_callback','cart_add','contact','faq','shipping','returns','featured','new_arrivals','forgot_password','reset_password','google_oauth','profile','track_order','blog','blog_post'];
 if (!in_array($page, $allowed, true)) {
     $page = 'home';
 }

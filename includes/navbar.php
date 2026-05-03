@@ -40,6 +40,10 @@ $is_category = isset($_GET['category']);
     <i class="fa fa-map-marker-alt d-lg-none"></i> Track Order
   </a>
 
+  <a class="nav-link nav-link-custom <?php echo ($current_page === 'blog') ? 'active' : ''; ?>" href="<?php echo $base; ?>/index.php?page=blog">
+    <i class="fa fa-blog d-lg-none"></i> Blog
+  </a>
+
   <a class="nav-link nav-link-custom position-relative" href="<?php echo $base; ?>/index.php?page=cart">
     <i class="fa fa-shopping-cart"></i>
     <span class="d-lg-none ms-2">Cart</span>

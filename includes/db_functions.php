@@ -1902,4 +1902,76 @@ function get_products_filtered_count($params = [])
         return 0;
     }
 }
+// ==================== BLOG FUNCTIONS ====================
+
+function get_all_blogs($limit = 0, $offset = 0) {
+    global $pdo;
+    if (!db_has_connection()) return [];
+    try {
+        $sql = "SELECT b.*, u.first_name, u.last_name FROM blog_posts b LEFT JOIN users u ON b.author_id = u.id ORDER BY b.created_at DESC";
+        if ($limit > 0) {
+            $sql .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+        }
+        $stmt = $pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return []; }
+}
+
+function get_blog_by_slug($slug) {
+    global $pdo;
+    if (!db_has_connection()) return null;
+    try {
+        $sql = "SELECT b.*, u.first_name, u.last_name, 
+                p.name as product_name, p.slug as product_slug, p.price as product_price, p.sale_price as product_sale_price,
+                (SELECT pi.file_path FROM product_images pi WHERE pi.product_id = p.id ORDER BY `order` ASC, id ASC LIMIT 1) AS product_image
+                FROM blog_posts b 
+                LEFT JOIN users u ON b.author_id = u.id 
+                LEFT JOIN products p ON b.linked_product_id = p.id
+                WHERE b.slug = ? LIMIT 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$slug]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return null; }
+}
+
+function get_blog_by_id($id) {
+    global $pdo;
+    if (!db_has_connection()) return null;
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM blog_posts WHERE id = ? LIMIT 1");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return null; }
+}
+
+function create_blog($title, $slug, $content, $image_url, $video_url, $uploaded_video_url, $author_id, $linked_product_id) {
+    global $pdo;
+    if (!db_has_connection()) return false;
+    try {
+        $stmt = $pdo->prepare("INSERT INTO blog_posts (title, slug, content, image_url, video_url, uploaded_video_url, author_id, linked_product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        if ($stmt->execute([$title, $slug, $content, $image_url, $video_url, $uploaded_video_url, $author_id, $linked_product_id])) {
+            return $pdo->lastInsertId();
+        }
+        return false;
+    } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return false; }
+}
+
+function update_blog($id, $title, $slug, $content, $image_url, $video_url, $uploaded_video_url, $linked_product_id) {
+    global $pdo;
+    if (!db_has_connection()) return false;
+    try {
+        $stmt = $pdo->prepare("UPDATE blog_posts SET title = ?, slug = ?, content = ?, image_url = ?, video_url = ?, uploaded_video_url = ?, linked_product_id = ? WHERE id = ?");
+        return $stmt->execute([$title, $slug, $content, $image_url, $video_url, $uploaded_video_url, $linked_product_id, $id]);
+    } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return false; }
+}
+
+function delete_blog($id) {
+    global $pdo;
+    if (!db_has_connection()) return false;
+    try {
+        $stmt = $pdo->prepare("DELETE FROM blog_posts WHERE id = ?");
+        return $stmt->execute([$id]);
+    } catch (PDOException $e) { log_pdo_exception($e, null, __FUNCTION__); return false; }
+}
+
 ?>

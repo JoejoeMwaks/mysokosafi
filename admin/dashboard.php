@@ -31,6 +31,12 @@
       <div class="desc">Assign roles and manage accounts.</div>
       <a class="btn btn-dark" href="manage_users.php">Open</a>
     </div>
+
+    <div class="admin-card">
+      <div class="title">Manage Blogs</div>
+      <div class="desc">Create, edit, or remove blog posts.</div>
+      <a class="btn btn-dark" href="manage_blogs.php">Open</a>
+    </div>
   </div>
 </main>
 
