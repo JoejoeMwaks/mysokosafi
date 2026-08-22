@@ -4,7 +4,36 @@ require_once __DIR__ . '/config/db.php';
 echo "<h2>Production Database Migration Tool</h2>";
 
 if (!isset($pdo) || $pdo === null) {
-    die("<h3 style='color:red;'>❌ Database connection failed. Cannot run migrations.</h3>");
+    echo "<h3 style='color:red;'>❌ Database connection failed. Cannot run migrations.</h3>";
+    
+    // Attempt manual connection to grab the exact error
+    try {
+        $host = getenv('MYSQLHOST');
+        $port = getenv('MYSQLPORT');
+        $db = getenv('MYSQLDATABASE');
+        $user = getenv('MYSQLUSER');
+        $pass = getenv('MYSQLPASSWORD');
+        
+        $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
+        $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 5];
+        
+        if (file_exists('/etc/ssl/certs/ca-certificates.crt')) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = '/etc/ssl/certs/ca-certificates.crt';
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+        }
+        
+        new PDO($dsn, $user, $pass, $options);
+    } catch (Throwable $e) {
+        echo "<div style='background:#fee; padding:15px; border:1px solid #f99; margin:20px 0;'>";
+        echo "<strong>Detailed Error:</strong> " . htmlspecialchars($e->getMessage()) . "<br><br>";
+        echo "<strong>Check your Render Environment Variables:</strong><br>";
+        echo "MYSQLHOST: " . htmlspecialchars($host ?: '(empty)') . "<br>";
+        echo "MYSQLDATABASE: " . htmlspecialchars($db ?: '(empty)') . "<br>";
+        echo "MYSQLUSER: " . htmlspecialchars($user ?: '(empty)') . "<br>";
+        echo "MYSQLPORT: " . htmlspecialchars($port ?: '(empty)') . "<br>";
+        echo "</div>";
+    }
+    die();
 }
 
 try {
