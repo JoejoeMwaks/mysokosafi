@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `addresses`
 --
 
-CREATE TABLE `addresses` (
+CREATE TABLE IF NOT EXISTS `addresses` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
   `label` varchar(50) DEFAULT 'home',
@@ -47,7 +47,7 @@ CREATE TABLE `addresses` (
 -- Table structure for table `carts`
 --
 
-CREATE TABLE `carts` (
+CREATE TABLE IF NOT EXISTS `carts` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `token` varchar(191) DEFAULT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE `carts` (
 -- Table structure for table `cart_items`
 --
 
-CREATE TABLE `cart_items` (
+CREATE TABLE IF NOT EXISTS `cart_items` (
   `id` int(10) UNSIGNED NOT NULL,
   `cart_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE `cart_items` (
 -- Table structure for table `categories`
 --
 
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(150) NOT NULL,
   `slug` varchar(191) NOT NULL,
@@ -98,7 +98,7 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `parent_id`, `cre
 -- Table structure for table `orders`
 --
 
-CREATE TABLE `orders` (
+CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `order_number` varchar(100) NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE `orders` (
 -- Table structure for table `order_items`
 --
 
-CREATE TABLE `order_items` (
+CREATE TABLE IF NOT EXISTS `order_items` (
   `id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE `order_items` (
 -- Table structure for table `payments`
 --
 
-CREATE TABLE `payments` (
+CREATE TABLE IF NOT EXISTS `payments` (
   `id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
   `method` varchar(100) DEFAULT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE `payments` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
   `id` int(10) UNSIGNED NOT NULL,
   `sku` varchar(100) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
@@ -180,7 +180,7 @@ INSERT INTO `products` (`id`, `sku`, `name`, `slug`, `description`, `price`, `sa
 -- Table structure for table `product_category`
 --
 
-CREATE TABLE `product_category` (
+CREATE TABLE IF NOT EXISTS `product_category` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -198,7 +198,7 @@ INSERT INTO `product_category` (`product_id`, `category_id`) VALUES
 -- Table structure for table `product_images`
 --
 
-CREATE TABLE `product_images` (
+CREATE TABLE IF NOT EXISTS `product_images` (
   `id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `file_path` varchar(255) NOT NULL,
@@ -213,7 +213,7 @@ CREATE TABLE `product_images` (
 -- Table structure for table `reviews`
 --
 
-CREATE TABLE `reviews` (
+CREATE TABLE IF NOT EXISTS `reviews` (
   `id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE `reviews` (
 -- Table structure for table `roles`
 --
 
-CREATE TABLE `roles` (
+CREATE TABLE IF NOT EXISTS `roles` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(50) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -251,7 +251,7 @@ INSERT INTO `roles` (`id`, `name`, `description`, `created_at`) VALUES
 -- Table structure for table `settings`
 --
 
-CREATE TABLE `settings` (
+CREATE TABLE IF NOT EXISTS `settings` (
   `key` varchar(191) NOT NULL,
   `value` text DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -263,7 +263,7 @@ CREATE TABLE `settings` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) UNSIGNED NOT NULL,
   `email` varchar(191) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -293,7 +293,7 @@ INSERT INTO `users` (`id`, `email`, `password`, `first_name`, `last_name`, `phon
 -- Table structure for table `user_roles`
 --
 
-CREATE TABLE `user_roles` (
+CREATE TABLE IF NOT EXISTS `user_roles` (
   `user_id` int(10) UNSIGNED NOT NULL,
   `role_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -576,7 +576,7 @@ ALTER TABLE `user_roles`
 -- Table structure for table `deleted_accounts`
 --
 
-CREATE TABLE `deleted_accounts` (
+CREATE TABLE IF NOT EXISTS `deleted_accounts` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` varchar(191) NOT NULL,
   `deleted_at` timestamp NOT NULL DEFAULT current_timestamp(),

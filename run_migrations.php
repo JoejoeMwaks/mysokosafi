@@ -52,6 +52,20 @@ try {
         echo "<p style='color:red;'>❌ schema.sql not found in config folder.</p>";
     }
 
+    // 1.5 Ensure google_id exists in users table (since schema.sql only creates tables if they don't exist)
+    echo "<p>Checking for google_id column...</p>";
+    try {
+        $stmt = $pdo->query("SHOW COLUMNS FROM users LIKE 'google_id'");
+        if ($stmt->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE users ADD COLUMN google_id VARCHAR(255) DEFAULT NULL");
+            echo "<p style='color:green;'>✅ Added google_id column to users table!</p>";
+        } else {
+            echo "<p style='color:green;'>✅ google_id column already exists.</p>";
+        }
+    } catch (Exception $e) {
+        echo "<p style='color:orange;'>⚠️ Could not check/add google_id: " . htmlspecialchars($e->getMessage()) . "</p>";
+    }
+
     // 2. Run Seed
     $seedFile = __DIR__ . '/config/seed.sql';
     if (file_exists($seedFile)) {
